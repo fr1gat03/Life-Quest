@@ -5,6 +5,4 @@
   <Project Path="LifeQuest.Domain/LifeQuest.Domain.csproj" />
   <Project Path="LifeQuest.Infrastructure/LifeQuest.Infrastructure.csproj" />
   <Project Path="LifeQuest.Presentation/LifeQuest.Presentation.csproj" />
-
-    
 </Solution>
