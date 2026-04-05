@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="../tests/LifeQuest.Application.Tests/LifeQuest.Application.Tests.csproj" />
+  <Project Path="../tests/LifeQuest.Domain.Tests/LifeQuest.Domain.Tests.csproj" />
+  <Project Path="LifeQuest.Application/LifeQuest.Application.csproj" />
+  <Project Path="LifeQuest.Domain/LifeQuest.Domain.csproj" />
+  <Project Path="LifeQuest.Infrastructure/LifeQuest.Infrastructure.csproj" />
+  <Project Path="LifeQuest.Presentation/LifeQuest.Presentation.csproj" />
+
+    
+</Solution>
