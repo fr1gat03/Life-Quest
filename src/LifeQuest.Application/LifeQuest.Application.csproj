@@ -4,6 +4,10 @@
     <ProjectReference Include="..\LifeQuest.Domain\LifeQuest.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Handlers\QuestCompletion\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
