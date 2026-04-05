@@ -1,0 +1,25 @@
+name: "PR Title Checker"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  check-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Title pattern
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prTitle = context.payload.pull_request.title;
+            const regex = /^[A-Z]+-[A-Za-z0-9]+ /; 
+            
+            if (!regex.test(prTitle)) {
+              core.setFailed(`Помилка: Назва Pull Request має починатися з Trello токена (наприклад: 'TRQF-123 Create repo'). Поточна назва: '${prTitle}'`);
+            } else {
+              console.log("Формат токена знайдено!");
+            }

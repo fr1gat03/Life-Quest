@@ -1,0 +1,16 @@
+#!/bin/bash
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+REGEX="^[A-Z]+-[A-Za-z0-9]+ "
+if [[ ! $COMMIT_MSG =~ $REGEX ]]; then
+    echo " ПОМИЛКА: Невірний формат коміту!"
+    echo "Повідомлення має починатися з Trello токена."
+    echo "Очікуваний формат: 'TRQF-123 Опис вашої задачі'"
+    echo "Твій текст: $COMMIT_MSG"
+    
+    exit 1
+fi
+
+exit 0
