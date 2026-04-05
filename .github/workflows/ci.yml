@@ -20,17 +20,17 @@ jobs:
           dotnet-version: '10.0.x'
       
       - name: Check Code Formatting
-        run: dotnet format src/LifeQuest.sln --verify-no-changes
+        run: dotnet format src/LifeQuest.slnx --verify-no-changes
         continue-on-error: true
       
       - name: Restore dependencies
-        run: dotnet restore src/LifeQuest.sln
+        run: dotnet restore src/LifeQuest.slnx
       
       - name: Build project
-        run: dotnet build src/LifeQuest.sln --configuration Release --no-restore
+        run: dotnet build src/LifeQuest.slnx --configuration Release --no-restore
       
       - name: Run automated tests
-        run: dotnet test src/LifeQuest.sln --configuration Release --no-build --verbosity normal
+        run: dotnet test src/LifeQuest.slnx --configuration Release --no-build --verbosity normal
       
       - name: Publish Windows App
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
