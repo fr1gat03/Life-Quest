@@ -9,7 +9,7 @@ on:
 
 jobs:
   check-title:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Check PR Title pattern
         uses: actions/github-script@v6
