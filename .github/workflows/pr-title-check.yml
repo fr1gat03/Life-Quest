@@ -19,7 +19,7 @@ jobs:
             const regex = /^[A-Z]+-[A-Za-z0-9]+ /; 
             
             if (!regex.test(prTitle)) {
-              core.setFailed(`Помилка: Назва Pull Request має починатися з Trello токена (наприклад: 'TRQF-123 Create repo'). Поточна назва: '${prTitle}'`);
+              core.setFailed(`Помилка: Назва Pull Request має починатися з Trello токена (наприклад: 'TRQF-123 feat: Create repo'). Поточна назва: '${prTitle}'`);
             } else {
               console.log("Формат токена знайдено!");
             }

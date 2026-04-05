@@ -4,6 +4,7 @@
 Як наш код розбитий на модулі.
 
 ```mermaid
+
 flowchart TD
     subgraph UI [Presentation Layer]
         AvaloniaApp[Avalonia UI Application]
@@ -36,6 +37,7 @@ flowchart TD
 На якій платформі та в якому середовищі все це буде працювати.
 
 ```mermaid
+
 flowchart LR
     subgraph UserPC [ПК Гравця - Windows OS]
         subgraph AppEnv [.NET 10 Runtime]
@@ -138,6 +140,7 @@ flowchart TD
 Життєвий цикл одного об'єкта: сутність Quest.
 
 ```mermaid
+
 stateDiagram-v2
     [*] --> Draft : Створено (Гравець налаштовує)
     Draft --> Active : Підтверджено (Взято в роботу)
