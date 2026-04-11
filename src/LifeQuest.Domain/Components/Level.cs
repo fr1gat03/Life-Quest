@@ -19,7 +19,7 @@ public class Level
 
         LevelValue++;
 
-        CurrentExpirience = deltaExpirience;
+        CurrentExpirience = deltaExpirience;                              
         MaxExpirience = _requirements.GetMaxExpirience(LevelValue);
     }
 
