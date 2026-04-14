@@ -1,5 +1,4 @@
 ﻿using LifeQuest.Domain.Components;
-using LifeQuest.Domain.ValueObjects;
 
 namespace LifeQuest.Domain.Entities;
 
