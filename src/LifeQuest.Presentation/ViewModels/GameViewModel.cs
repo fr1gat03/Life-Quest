@@ -10,11 +10,11 @@ public class GameViewModel : ViewModelBase
     public string PlayerName => _user.Login;
     public string PlayerLevel => $"Рівень {_user.UserStats.Level.LevelValue}";
     
-    public int CurrentHp => _user.UserStats.HeatPoints;
+    public int CurrentHp => _user.UserStats.HealthPoints;
     public int MaxHp => 100; 
     public string HpText => $"{CurrentHp}/{MaxHp}";
-    public int CurrentXp => _user.UserStats.Level.CurrentExpirience;
-    public int MaxXp => _user.UserStats.Level.MaxExpirience;
+    public int CurrentXp => _user.UserStats.Level.CurrentExperience;
+    public int MaxXp => _user.UserStats.Level.MaxExperience;
     public string XpText => $"{CurrentXp}/{MaxXp}";
     
     public int Gold => _user.UserStats.Gold;
