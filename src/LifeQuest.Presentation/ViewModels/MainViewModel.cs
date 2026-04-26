@@ -20,4 +20,4 @@ public class MainViewModel : ViewModelBase
     {
         CurrentPage = new GameViewModel(username);
     }
-}
+} 
