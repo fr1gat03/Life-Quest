@@ -24,4 +24,8 @@
     <ProjectReference Include="..\LifeQuest.Application\LifeQuest.Application.csproj" />
     <ProjectReference Include="..\LifeQuest.Infrastructure\LifeQuest.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
 </Project>

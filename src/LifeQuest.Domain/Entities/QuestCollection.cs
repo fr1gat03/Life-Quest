@@ -66,10 +66,6 @@ public class QuestCollection
         {
             correctQuest = false;
         }
-        else if (quest.Reward == null)
-        {
-            correctQuest = false;
-        }
 
         return correctQuest;
     }

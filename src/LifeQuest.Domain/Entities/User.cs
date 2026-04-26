@@ -4,34 +4,34 @@ namespace LifeQuest.Domain.Entities;
 
 public class User
 {
-    private QuestCollection _quests;
-    private UserStats _userStats;
-    public string Login { get; }
-    public string PasswordHash { get; }
+    public QuestCollection Quests { get; private set; }
+    public UserStats UserStats { get; private set; }
+    public string Login { get; private set; }
+    public string PasswordHash { get; private set; }
     public int Streak { get; private set; }
 
     public User(string login, string passwordHash)
     {
-        _quests = new QuestCollection();
-        _userStats = new UserStats();
+        Quests = new QuestCollection();
+        UserStats = new UserStats();
 
         Login = login;
-        PasswordHash = passwordHash;
+        PasswordHash = passwordHash;      
     }
 
     public bool RemoveQuest(string id)
     {
-        return _quests.RemoveQuest(id);
+        return Quests.RemoveQuest(id);
     }
 
     public bool AddQuest(string id, Quest quest)
     {
-        return _quests.AddQuest(id, quest);
+        return Quests.AddQuest(id, quest);
     }
 
     public bool ToComplete(string id)
     {
-        return _quests.ToComplete(id);
+        return Quests.ToComplete(id);
     }
 
     public void IncreaseStreak()
@@ -46,16 +46,16 @@ public class User
 
     public void UpdateHeatPoints(int heatPoints)
     {
-        _userStats.UpdateHeatPoints(heatPoints);
+        UserStats.UpdateHeatPoints(heatPoints);
     }
 
     public void UpdateGold(int gold)
     {
-        _userStats.UpdateGold(gold);
+        UserStats.UpdateGold(gold);
     }
 
     public void UpdateExperience(int experience)
     {
-        _userStats.Level.UpdateExperience(experience);
+        UserStats.Level.UpdateExperience(experience);
     }
 }

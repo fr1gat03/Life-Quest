@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LifeQuest.Domain.SecureData;
+﻿namespace LifeQuest.Domain.SecureData;
 
 public class PasswordStats
 {
