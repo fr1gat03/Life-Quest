@@ -2,42 +2,42 @@
 
 public class Level
 {
-    private readonly LevelRequirements _requirements = new LevelRequirements();
     public int LevelValue { get; private set; }
-    public int CurrentExpirience { get; private set; }
-    public int MaxExpirience { get; private set; }
+    public int CurrentExperience { get; private set; } 
+    public int MaxExperience { get; private set; }
 
     public Level()
     {
         LevelValue = 1;
-        MaxExpirience = _requirements.GetMaxExpirience(LevelValue);
+        CurrentExperience = 0;
+        MaxExperience = GetMaxExperience(LevelValue);
     }
 
-    public void LevelUp(int expirience)
+    private void LevelUp(int experience)
     {
-        int deltaExpirience = expirience - (MaxExpirience - CurrentExpirience);
+        int deltaExperience = experience - (MaxExperience - CurrentExperience);
 
         LevelValue++;
 
-        CurrentExpirience = deltaExpirience;                              
-        MaxExpirience = _requirements.GetMaxExpirience(LevelValue);
+        CurrentExperience = deltaExperience;                              
+        MaxExperience = GetMaxExperience(LevelValue);
     }
 
-    public void LevelDown(int expirience)
+    private void LevelDown(int experience)
     {
-        int previousMaxExperience = _requirements.GetMaxExpirience(LevelValue - 1);
-        int deltaExpirience = previousMaxExperience - (expirience - CurrentExpirience);
+        int previousMaxExperience = GetMaxExperience(LevelValue - 1);
+        int deltaExperience = previousMaxExperience + experience + CurrentExperience;
 
         LevelValue--;
 
-        CurrentExpirience = deltaExpirience;
-        MaxExpirience = previousMaxExperience;
+        CurrentExperience = deltaExperience;
+        MaxExperience = previousMaxExperience;
     }
 
     public void UpdateExperience(int experience)
     {
-        bool shouldLevelUp = CurrentExpirience + experience >= MaxExpirience;
-        bool shouldLevelDown = CurrentExpirience + experience <= 0;
+        bool shouldLevelUp = CurrentExperience + experience >= MaxExperience;
+        bool shouldLevelDown = CurrentExperience + experience < 0;
 
         if (shouldLevelUp)
         {
@@ -45,8 +45,23 @@ public class Level
         }
         else if (shouldLevelDown)
         {
-            LevelDown(experience);
-
+            if (LevelValue == 1)
+            {
+                CurrentExperience = 0;
+            }
+            else
+            {
+                LevelDown(experience);
+            }
         }
+        else
+        {
+            CurrentExperience += experience;
+        }
+    }
+
+    private int GetMaxExperience(int level)
+    {
+        return level * 150;
     }
 }
