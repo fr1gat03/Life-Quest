@@ -3,36 +3,33 @@
 public class UserStats
 {   
     public Level Level { get; }
-    public int HeatPoints { get; private set; }
+    public int HealthPoints { get; private set; }
     public int Gold { get; private set; }
 
     public UserStats ()
     {
         Level = new Level();
-        HeatPoints = 100;
+        HealthPoints = 100;
     }
 
-    public bool UpdateHeatPoints (int heatPoints)
+    public void UpdateHeatPoints (int hp)
     {
-        if (HeatPoints + heatPoints > 100)
+        if (HealthPoints + hp > 100)
         {
-            HeatPoints = 100;
+            HealthPoints = 100;
         }
-        else if (HeatPoints + heatPoints < 0)
+        else if (HealthPoints + hp < 0)
         {
-            HeatPoints = 0;
+            HealthPoints = 0;
         }
         else
         {
-            HeatPoints += heatPoints;
+            HealthPoints += hp;
         }
-        
-        return true;
     }
 
-    public bool UpdateGold (int gold)
+    public void UpdateGold (int gold)
     {
         Gold += gold;
-        return true;
     }
 }

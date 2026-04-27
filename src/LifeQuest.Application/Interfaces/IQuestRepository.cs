@@ -1,4 +1,4 @@
-using LifeQuest.Domain.Entities;
+using LifeQuest.Domain.Components;
 
 namespace LifeQuest.Application.Interfaces;
 
