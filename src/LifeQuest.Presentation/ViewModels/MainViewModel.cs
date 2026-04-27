@@ -61,4 +61,4 @@ public class MainViewModel : ViewModelBase
     {
         CurrentPage = gameVm;
     }
-}
+} 
