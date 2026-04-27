@@ -16,7 +16,7 @@ public class TavernViewModel : ViewModelBase
     private string _userInput = "";
     private bool _isLoading = false;
 
-    // Список повідомлень для відображення в UI
+    // Повідомлення для відображення в UI
     public ObservableCollection<ChatMessage> ChatHistory { get; } = new();
 
     public string UserInput
@@ -33,7 +33,7 @@ public class TavernViewModel : ViewModelBase
 
     public ICommand SendCommand { get; }
     public ICommand BackCommand { get; }
-    public ICommand CreateQuestCommand { get; } // НОВА КОМАНДА
+    public ICommand CreateQuestCommand { get; }
 
     public TavernViewModel(IAiService aiService, Action onBack, Action<string> onCreateQuestFromAdvice)
     {
@@ -43,19 +43,17 @@ public class TavernViewModel : ViewModelBase
 
         SendCommand = new RelayCommand(async () => await SendMessage());
         BackCommand = new RelayCommand(() => _onBack());
-
+        
+        ChatHistory.Add(new ChatMessage { Role = "🧙‍♂️ Гаррі", Text = "Вітаю, мандрівнику! Я Гаррі. Розкажи мені про свою велику ціль, і я допоможу розбити її на дрібні квести." });
+        
         CreateQuestCommand = new RelayCommand(() => 
         {
-            // Беремо останнє повідомлення Елдора
             var lastNpcMsg = ChatHistory.LastOrDefault(m => m.Role.Contains("Елдор"))?.Text;
             if (!string.IsNullOrEmpty(lastNpcMsg))
             {
                 _onCreateQuestFromAdvice(lastNpcMsg);
             }
         });
-        
-        // NPC вітається першим!
-        ChatHistory.Add(new ChatMessage { Role = "🧙‍♂️ Гаррі", Text = "Вітаю, мандрівнику! Я Гаррі. Розкажи мені про свою велику ціль, і я допоможу розбити її на дрібні квести." });
     }
 
     private async Task SendMessage()
