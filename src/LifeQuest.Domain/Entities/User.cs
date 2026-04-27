@@ -37,16 +37,6 @@ public class User
         return UserStats.UpdateGold(gold);
     }
 
-    public void LevelUp(int expirience)
-    {
-        UserStats.Level.LevelUp(expirience);
-    }
-
-    public void LevelDown(int expirience)
-    {
-        UserStats.Level.LevelDown(expirience);
-    }
-
     public void UpdateExperience(int experience)
     {
         UserStats.Level.UpdateExperience(experience);

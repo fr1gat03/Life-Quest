@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LifeQuest.Presentation.ViewModels"
+             x:Class="LifeQuest.Presentation.Views.CreateQuestView"
+             x:DataType="vm:CreateQuestViewModel"
+             Background="#1E1E2E">
+             
+    <Border Padding="30" Background="#181825" CornerRadius="15" BoxShadow="0 10 30 0 #000000"
+            HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        <StackPanel Spacing="15">
+            <TextBlock Text="📜 Новий Квест" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#CDD6F4"/>
+            
+            <TextBlock Text="Опиши задачу своїми словами:" Foreground="#A6ADC8"/>
+            <TextBox Text="{Binding UserInput}" Watermark="Наприклад: помити посуд або пробігти 5 км" 
+                     Height="60" TextWrapping="Wrap" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
+            
+            <Button Content="✨ Згенерувати баланс через ШІ" Command="{Binding GenerateCommand}"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                    Background="#CBA6F7" Foreground="#11111B" FontWeight="Bold" CornerRadius="8"/>
+
+            <Border Height="1" Background="#45475A" Margin="0,10"/>
+
+            <TextBlock Text="Назва квесту:" Foreground="#A6ADC8"/>
+            <TextBox Text="{Binding Title}" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
+
+            <TextBlock Text="Складність:" Foreground="#A6ADC8" Margin="0,10,0,0"/>
+            <ComboBox SelectedItem="{Binding Difficulty}" Background="#313244" Foreground="#CDD6F4" HorizontalAlignment="Stretch">
+                <ComboBoxItem>Easy</ComboBoxItem>
+                <ComboBoxItem>Medium</ComboBoxItem>
+                <ComboBoxItem>Hard</ComboBoxItem>
+                <ComboBoxItem>Epic</ComboBoxItem>
+            </ComboBox>
+            
+            <Grid ColumnDefinitions="*, *">
+                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                    <TextBlock Text="Досвід (XP):" Foreground="#A6E3A1"/>
+                    <TextBox Text="{Binding RewardXp}" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                    <TextBlock Text="Золото:" Foreground="#F9E2AF"/>
+                    <TextBox Text="{Binding RewardGold}" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="#F38BA8" TextWrapping="Wrap" FontWeight="SemiBold"/>
+
+            <Grid ColumnDefinitions="*, *" Margin="0,10,0,0">
+                <Button Grid.Column="0" Content="Скасувати" Command="{Binding CancelCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0"
+                        Background="#45475A" Foreground="#CDD6F4" CornerRadius="8"/>
+                        
+                <Button Grid.Column="1" Content="Зберегти квест" Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding !IsLoading}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0"
+                        Background="#A6E3A1" Foreground="#11111B" FontWeight="Bold" CornerRadius="8"/>
+            </Grid>
+        </StackPanel>
+    </Border>
+</UserControl>

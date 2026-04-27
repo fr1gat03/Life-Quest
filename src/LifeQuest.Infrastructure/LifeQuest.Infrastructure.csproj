@@ -1,7 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\tests\LifeQuest.Application.Tests\LifeQuest.Application.Tests.csproj" />
     <ProjectReference Include="..\LifeQuest.Application\LifeQuest.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.GenAI" Version="1.6.1" />
   </ItemGroup>
 
   <PropertyGroup>

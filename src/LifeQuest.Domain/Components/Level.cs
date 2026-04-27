@@ -2,51 +2,34 @@
 
 public class Level
 {
-    private readonly LevelRequirements _requirements = new LevelRequirements();
     public int LevelValue { get; private set; }
-    public int CurrentExpirience { get; private set; }
-    public int MaxExpirience { get; private set; }
+    
+    public int CurrentExperience { get; private set; }
+    public int MaxExperience { get; private set; }
 
     public Level()
     {
         LevelValue = 1;
-        MaxExpirience = _requirements.GetMaxExpirience(LevelValue);
-    }
-
-    public void LevelUp(int expirience)
-    {
-        int deltaExpirience = expirience - (MaxExpirience - CurrentExpirience);
-
-        LevelValue++;
-
-        CurrentExpirience = deltaExpirience;                              
-        MaxExpirience = _requirements.GetMaxExpirience(LevelValue);
-    }
-
-    public void LevelDown(int expirience)
-    {
-        int previousMaxExperience = _requirements.GetMaxExpirience(LevelValue - 1);
-        int deltaExpirience = previousMaxExperience - (expirience - CurrentExpirience);
-
-        LevelValue--;
-
-        CurrentExpirience = deltaExpirience;
-        MaxExpirience = previousMaxExperience;
+        CurrentExperience = 0;
+        MaxExperience = GetMaxExperience(LevelValue);
     }
 
     public void UpdateExperience(int experience)
     {
-        bool shouldLevelUp = CurrentExpirience + experience >= MaxExpirience;
-        bool shouldLevelDown = CurrentExpirience + experience <= 0;
+        if (experience < 0) return;
 
-        if (shouldLevelUp)
-        {
-            LevelUp(experience);
-        }
-        else if (shouldLevelDown)
-        {
-            LevelDown(experience);
+        CurrentExperience += experience;
 
+        while (CurrentExperience >= MaxExperience)
+        {
+            CurrentExperience -= MaxExperience;
+            LevelValue++;
+            MaxExperience = GetMaxExperience(LevelValue);
         }
+    }
+
+    private int GetMaxExperience(int level)
+    {
+        return level * 150;
     }
 }
