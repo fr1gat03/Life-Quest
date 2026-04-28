@@ -1,30 +1,44 @@
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using LifeQuest.Domain.Entities;
+using LifeQuest.Application.Interfaces;
 
 namespace LifeQuest.Presentation.ViewModels;
 
 public class GameViewModel : ViewModelBase
 {
     private readonly User _user;
+    private readonly IAiService _aiService;
+    private readonly MainViewModel _mainNavigator;
 
+    // Властивості для UI
     public string PlayerName => _user.Login;
     public string PlayerLevel => $"Рівень {_user.UserStats.Level.LevelValue}";
     
     public int CurrentHp => _user.UserStats.HealthPoints;
     public int MaxHp => 100; 
     public string HpText => $"{CurrentHp}/{MaxHp}";
+    
     public int CurrentXp => _user.UserStats.Level.CurrentExperience;
     public int MaxXp => _user.UserStats.Level.MaxExperience;
     public string XpText => $"{CurrentXp}/{MaxXp}";
     
     public int Gold => _user.UserStats.Gold;
 
+    // Колекції та команди
     public ObservableCollection<QuestViewModel> ActiveQuests { get; }
+    public ICommand OpenCreateQuestCommand { get; }
+    public ICommand OpenTavernCommand { get; }
 
-    public GameViewModel(string username)
+    // Єдиний правильний конструктор на 3 параметри!
+    public GameViewModel(string username, IAiService aiService, MainViewModel mainNavigator)
     {
+        OpenTavernCommand = new RelayCommand(() => _mainNavigator.NavigateToTavern(this));
         _user = new User(username, "dummy_password_hash");
         _user.UpdateExperience(20);
+        
+        _aiService = aiService;
+        _mainNavigator = mainNavigator;
 
         ActiveQuests = new ObservableCollection<QuestViewModel>
         {
@@ -32,7 +46,23 @@ public class GameViewModel : ViewModelBase
             new QuestViewModel("📜 Прочитай 📝Tasks в тг каналі", 30, 5, CompleteQuest),
             new QuestViewModel("🧪 Протестувати нарахування досвіду 🤯", 100, 20, CompleteQuest)
         };
+        
+        OpenCreateQuestCommand = new RelayCommand(() => _mainNavigator.NavigateToCreateQuest(this));
     }
+
+    // Метод для додавання згенерованого ШІ квесту
+    public void AddQuestFromAi(AiQuestProposal proposal)
+    {
+        var newQuest = new QuestViewModel(
+            proposal.Title, 
+            proposal.RewardXp, 
+            proposal.RewardGold, 
+            CompleteQuest
+        );
+        ActiveQuests.Insert(0, newQuest); // Додаємо на самий верх списку
+    }
+
+    // Метод виконання квесту
     private void CompleteQuest(QuestViewModel quest)
     {
         _user.UpdateExperience(quest.RewardXp);
@@ -43,8 +73,5 @@ public class GameViewModel : ViewModelBase
         OnPropertyChanged(nameof(XpText));
         OnPropertyChanged(nameof(PlayerLevel));
         OnPropertyChanged(nameof(Gold));
-        
-        // Можна видалити квест зі списку після виконання
-        // ActiveQuests.Remove(quest); 
     }
 }

@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.3.1" />
+    <ProjectReference Include="..\..\tests\LifeQuest.Application.Tests\LifeQuest.Application.Tests.csproj" />
+    <ProjectReference Include="..\LifeQuest.Application\LifeQuest.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LifeQuest.Application\LifeQuest.Application.csproj" />
+    <PackageReference Include="Google.GenAI" Version="1.6.1" />
   </ItemGroup>
 
   <PropertyGroup>
