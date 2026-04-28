@@ -6,15 +6,17 @@ public class User
 {
     public QuestCollection Quests { get; private set; }
     public UserStats UserStats { get; private set; }
+    public int Id { get; private set; }
     public string Login { get; private set; }
     public string PasswordHash { get; private set; }
     public int Streak { get; private set; }
 
-    public User(string login, string passwordHash)
+    public User(int id, string login, string passwordHash)
     {
         Quests = new QuestCollection();
         UserStats = new UserStats();
 
+        Id = id;
         Login = login;
         PasswordHash = passwordHash;      
     }

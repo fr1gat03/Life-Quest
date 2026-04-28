@@ -1,6 +1,6 @@
 ﻿namespace LifeQuest.Domain.SecureData;
 
-public class HashRequirments
+public class HashRequirements
 {
     private Dictionary<string, PasswordStats> _requirements = new Dictionary<string, PasswordStats>();
 
