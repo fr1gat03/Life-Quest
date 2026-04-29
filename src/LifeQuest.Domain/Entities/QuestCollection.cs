@@ -1,46 +1,47 @@
 ﻿using LifeQuest.Domain.Components;
+using System.Diagnostics.CodeAnalysis;
 
 namespace LifeQuest.Domain.Entities;
 
 public class QuestCollection
 {
-    private Dictionary<string, Quest> collection = new Dictionary<string, Quest>();
+    private Dictionary<string, Quest> quests = new Dictionary<string, Quest>();
 
     public bool RemoveQuest(string id)
     {
-        if (!IsValidId(id))
+        if (IsNewId(id))
         {
-            throw new ArgumentException("Invalid id");
+            return false;
         }
 
-        collection.Remove(id);
+        quests.Remove(id);
         return true;
     }
 
     public bool AddQuest(string id, Quest quest)
     {
-        if (!IsValidId(id))
-        {
-            throw new ArgumentException("Invalid id");
-        }
-
         if (!IsValidQuest(quest))
         {
             throw new ArgumentException("Invalid quest");
         }
 
-        collection[id] = quest;
+        if (!IsNewId(id))
+        {
+            return false;
+        }
+
+        quests[id] = quest;
         return true;
     }
 
     public bool ToComplete(string id)
     {
-        if (!IsValidId(id))
+        if (IsNewId(id))
         {
-            throw new ArgumentException("Invalid id");
+            return false;
         }
 
-        Quest quest = collection[id];
+        Quest quest = quests[id];
 
         if (quest.IsCompleted)
         {
@@ -51,11 +52,29 @@ public class QuestCollection
         return true;
     }
 
+    private bool IsNewId(string id)
+    {
+        if (!IsValidId(id))
+        {
+            throw new ArgumentException("Invalid id");
+        }
+
+        if (quests.ContainsKey(id))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     private bool IsValidId(string id)
     {
-        bool uniqueId = collection.ContainsKey(id);
+        if (id == null)
+        {
+            return false;
+        }
 
-        return uniqueId;
+        return true;
     }
 
     private bool IsValidQuest(Quest quest)
