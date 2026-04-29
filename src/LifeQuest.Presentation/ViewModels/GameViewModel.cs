@@ -82,4 +82,4 @@ public class GameViewModel : ViewModelBase
         OnPropertyChanged(nameof(PlayerLevel));
         OnPropertyChanged(nameof(Gold));
     }
-}
+} 
