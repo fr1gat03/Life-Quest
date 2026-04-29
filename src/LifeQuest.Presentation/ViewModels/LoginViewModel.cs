@@ -6,6 +6,7 @@ public class LoginViewModel : ViewModelBase
     
     private string _username = "";
     private string _password = "";
+    private int _id = 0;
 
     public string Username 
     { 
@@ -19,6 +20,12 @@ public class LoginViewModel : ViewModelBase
         set { _password = value; OnPropertyChanged(); } 
     }
 
+    public int Id
+    {
+        get => _id;
+        set { _id = value; OnPropertyChanged(); }
+    }
+
     public LoginViewModel(MainViewModel mainNavigator)
     {
         _mainNavigator = mainNavigator;
@@ -30,7 +37,7 @@ public class LoginViewModel : ViewModelBase
         {
             // У майбутньому тут буде перевірка пароля в базі даних
             // Поки що просто пускаємо в гру
-            _mainNavigator.NavigateToGame(Username);
+            _mainNavigator.NavigateToGame(Id, Username);
         }
     }
 }

@@ -19,9 +19,9 @@ public class MainViewModel : ViewModelBase
         _currentPage = new LoginViewModel(this);
     }
 
-    public void NavigateToGame(string username)
+    public void NavigateToGame(int id, string username)
     {
-        CurrentPage = new GameViewModel(username, _aiService, this);
+        CurrentPage = new GameViewModel(id, username, _aiService, this);
     }
 
     public void NavigateToCreateQuest(GameViewModel gameVm)
