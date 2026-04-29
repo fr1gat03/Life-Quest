@@ -31,10 +31,10 @@ public class GameViewModel : ViewModelBase
     public ICommand OpenTavernCommand { get; }
 
     // Єдиний правильний конструктор на 3 параметри!
-    public GameViewModel(string username, IAiService aiService, MainViewModel mainNavigator)
+    public GameViewModel(int id, string username, IAiService aiService, MainViewModel mainNavigator)
     {
         OpenTavernCommand = new RelayCommand(() => _mainNavigator.NavigateToTavern(this));
-        _user = new User(username, "dummy_password_hash");
+        _user = new User(id, username, "dummy_password_hash");
         _user.UpdateExperience(20);
         
         _aiService = aiService;
