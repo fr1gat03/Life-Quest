@@ -36,6 +36,12 @@ public class MainViewModel : ViewModelBase
         );
     }
     
+    public void NavigateToSettings(GameViewModel gameVm)
+    {
+        // TODO: замінити на SettingsViewModel коли створимо
+        NavigateBackToGame(gameVm);
+    }
+    
     public void NavigateToTavern(GameViewModel gameVm)
     {
         CurrentPage = new TavernViewModel(
