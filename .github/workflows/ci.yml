@@ -13,7 +13,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
+      - name: Create appsettings.json
+        run: |
+          echo '{"GeminiApiKey": "${{ secrets.GEMINI_API_KEY }}"}' > src/LifeQuest.Presentation/appsettings.json
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:

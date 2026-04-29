@@ -9,9 +9,15 @@ namespace LifeQuest.Infrastructure.Services;
 
 public class GeminiAiService : IAiService
 {
-    // ТИМЧАСОВО встав свій ключ сюди
-    private readonly string _apiKey = "AIza...";
+    private readonly string _apiKey;
     
+    public GeminiAiService(string apiKey)
+    {
+        if (string.IsNullOrWhiteSpace(apiKey))
+            throw new ArgumentException("Gemini API key is not configured.");
+        _apiKey = apiKey;
+    }
+
     private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions 
     { 
         PropertyNameCaseInsensitive = true 
