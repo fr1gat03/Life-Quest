@@ -27,4 +27,4 @@ public class QuestService
         var chain = QuestHandlerChainBuilder.Build(_aiService, _userRepository, _questRepository);
         return await chain.Handle(context);
     }
-}
+} 

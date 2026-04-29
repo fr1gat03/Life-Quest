@@ -21,4 +21,4 @@ public sealed class ValidationHandler : BaseQuestHandler
 
         return PassToNextAsync(context);
     }
-}
+} 
