@@ -1,5 +1,4 @@
 ﻿using LifeQuest.Domain.Components;
-using System.Diagnostics.CodeAnalysis;
 
 namespace LifeQuest.Domain.Entities;
 
