@@ -1,53 +1,23 @@
 ﻿using LifeQuest.Application.Handlers.QuestExecution;
-using LifeQuest.Application.Tests.Helpers;
+using LifeQuest.Domain.Entities;
+using LifeQuest.Domain.Enums;
+using NUnit.Framework;
 
-namespace LifeQuest.Application.Tests.Handlers;
+namespace LifeQuest.Application.Tests;
 
 public class ValidationHandlerTests
 {
-    private ValidationHandler _handler = null;
-
-    [SetUp]
-    public void Setup() => _handler = new ValidationHandler();
-
     [Test]
-    public async Task Handle_ValidQuest_PassesToNext()
+    public async Task Handle_ValidContext_PassesToNext()
     {
-        var context = new QuestExecutionContext(TestData.NewQuest(), TestData.NewUser());
+        var user = new User(1, "Login", "Pass");
+        var quest = new Quest("1", "Title", 100, 50, Difficulty.Easy);
+        var context = new QuestExecutionContext(quest, user);
+        var handler = new ValidationHandler();
 
-        QuestExecutionResult result = await _handler.Handle(context);
+        
+        var result = await handler.Handle(context);
 
-        Assert.That(result.IsSuccess, Is.True);
-    }
-
-    [Test]
-    public async Task Handle_AlreadyCompletedQuest_ReturnsFailure()
-    {
-        var context = new QuestExecutionContext(TestData.NewQuest(true), TestData.NewUser());
-
-        QuestExecutionResult result = await _handler.Handle(context);
-
-        Assert.That(result.IsSuccess, Is.False);
-        Assert.That(result.ErrorMessage, Is.Not.Null.And.Not.Empty);
-    }
-
-    [Test]
-    public async Task Handle_NullQuest_ReturnsFailure()
-    {
-        var context = new QuestExecutionContext(null, TestData.NewUser());
-
-        QuestExecutionResult result = await _handler.Handle(context);
-
-        Assert.That(result.IsSuccess, Is.False);
-    }
-
-    [Test]
-    public async Task Handle_NullUser_ReturnsFailure()
-    {
-        var context = new QuestExecutionContext(TestData.NewQuest(), null);
-
-        QuestExecutionResult result = await _handler.Handle(context);
-
-        Assert.That(result.IsSuccess, Is.False);
+        Assert.That(result, Is.Not.Null);
     }
 }

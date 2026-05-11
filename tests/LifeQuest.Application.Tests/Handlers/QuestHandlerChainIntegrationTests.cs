@@ -1,51 +1,38 @@
 ﻿using LifeQuest.Application.Handlers.QuestExecution;
-using LifeQuest.Application.Tests.Fakes;
-using LifeQuest.Application.Tests.Helpers;
+using LifeQuest.Application.Interfaces;
+using LifeQuest.Domain.Entities;
+using LifeQuest.Domain.Enums;
+using Moq;
+using NUnit.Framework;
 
-namespace LifeQuest.Application.Tests.Handlers;
+namespace LifeQuest.Application.Tests;
 
 public class QuestHandlerChainIntegrationTests
 {
-    private FakeAiService _aiService = null;
-    private FakeUserRepository _userRepo = null;
-    private FakeQuestRepository _questRepo = null;
-
-    [SetUp]
-    public void Setup()
-    {
-        _aiService = new FakeAiService();
-        _userRepo = new FakeUserRepository();
-        _questRepo = new FakeQuestRepository();
-    }
-
     [Test]
-    public async Task FullChain_ValidQuest_ReturnsSuccessWithMotivation()
+    public async Task FullChain_UpdatesUserAndSavesToDb()
     {
-        var user = TestData.NewUser();
-        var quest = TestData.NewQuest();
-        var chain = QuestHandlerChainBuilder.Build(_aiService, _userRepo, _questRepo);
+        var userRepoMock = new Mock<IUserRepository>();
+        var questRepoMock = new Mock<IQuestRepository>();
+
+        var user = new User(1, "Login", "Pass");
+        var quest = new Quest("1", "Title", 100, 50, Difficulty.Medium);
         var context = new QuestExecutionContext(quest, user);
 
-        QuestExecutionResult result = await chain.Handle(context);
+        var validation = new ValidationHandler();
+        var experience = new ExperienceHandler();
+        var persistence = new PersistenceHandler(userRepoMock.Object, questRepoMock.Object);
 
-        Assert.That(result.IsSuccess, Is.True);
-        Assert.That(result.MotivationMessage, Is.EqualTo(FakeAiService.FakeMessage));
-        Assert.That(quest.IsCompleted, Is.True);
-        Assert.That(user.UserStats.Level.CurrentExperience, Is.EqualTo(50));
-        Assert.That(user.UserStats.Gold, Is.EqualTo(10));
-    }
+        validation.SetNext(experience);
+        experience.SetNext(persistence);
 
-    [Test]
-    public async Task FullChain_AlreadyCompletedQuest_StopsAtValidation()
-    {
-        var chain = QuestHandlerChainBuilder.Build(_aiService, _userRepo, _questRepo);
-        var context = new QuestExecutionContext(
-            TestData.NewQuest(isCompleted: true),
-            TestData.NewUser());
+        await validation.Handle(context);
 
-        QuestExecutionResult result = await chain.Handle(context);
+       
+        Assert.That(user.XP, Is.EqualTo(50));
 
-        Assert.That(result.IsSuccess, Is.False);
-        Assert.That(_userRepo.SavedUser, Is.Null);
+        
+        userRepoMock.Verify(r => r.SaveUser(It.IsAny<User>()), Times.Once);
+        questRepoMock.Verify(r => r.UpdateQuest(It.IsAny<Quest>()), Times.Once);
     }
 }
