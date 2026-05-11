@@ -1,63 +1,66 @@
-﻿using LifeQuest.Domain.Components;
+﻿using System;
+using LifeQuest.Domain.Components;
 
 namespace LifeQuest.Domain.Entities;
 
+public class LevelInfo
+{
+    public int LevelValue { get; set; } = 1;
+    public int CurrentExperience { get; set; } = 0;
+    public int MaxExperience { get; set; } = 100;
+}
+
+public class UserStats
+{
+    public int HealthPoints { get; set; } = 100;
+    public int Gold { get; set; } = 0;
+    public LevelInfo Level { get; set; } = new LevelInfo();
+}
+
 public class User
 {
-    public QuestCollection Quests { get; private set; }
-    public UserStats UserStats { get; private set; }
+    public UserStats UserStats { get; private set; } = new UserStats();
+
+    // ЯРЛИКИ (Shorthands) - щоб працювали і тести, і UI
+    public int Gold => UserStats.Gold;
+    public int XP => UserStats.Level.CurrentExperience;
+    public int HealthPoints => UserStats.HealthPoints;
+    public int Level => UserStats.Level.LevelValue;
+
     public int Id { get; private set; }
     public string Login { get; private set; }
     public string PasswordHash { get; private set; }
+    public QuestCollection Quests { get; private set; }
     public int Streak { get; private set; }
 
     public User(int id, string login, string passwordHash)
     {
-        Quests = new QuestCollection();
-        UserStats = new UserStats();
-
         Id = id;
         Login = login;
-        PasswordHash = passwordHash;      
+        PasswordHash = passwordHash;
+        Quests = new QuestCollection();
     }
 
-    public bool RemoveQuest(string id)
+    private User() { Quests = new QuestCollection(); }
+
+    public void UpdateHealth(int amount)
     {
-        return Quests.RemoveQuest(id);
+        UserStats.HealthPoints = Math.Clamp(UserStats.HealthPoints + amount, 0, 100);
     }
 
-    public bool AddQuest(string id, Quest quest)
+    public void UpdateExperience(int amount)
     {
-        return Quests.AddQuest(id, quest);
+        var lvl = UserStats.Level;
+        lvl.CurrentExperience += amount;
+        while (lvl.CurrentExperience >= lvl.MaxExperience)
+        {
+            lvl.CurrentExperience -= lvl.MaxExperience;
+            lvl.LevelValue++;
+            lvl.MaxExperience = (int)(lvl.MaxExperience * 1.2);
+        }
     }
 
-    public bool ToComplete(string id)
-    {
-        return Quests.ToComplete(id);
-    }
-
-    public void IncreaseStreak()
-    {
-        Streak++;
-    }
-
-    public void ResetStreak()
-    {
-        Streak = 0;
-    }
-
-    public void UpdateHeatPoints(int heatPoints)
-    {
-        UserStats.UpdateHeatPoints(heatPoints);
-    }
-
-    public void UpdateGold(int gold)
-    {
-        UserStats.UpdateGold(gold);
-    }
-
-    public void UpdateExperience(int experience)
-    {
-        UserStats.Level.UpdateExperience(experience);
-    }
+    public void UpdateGold(int amount) => UserStats.Gold += amount;
+    public void IncreaseStreak() => Streak++;
+    public void ResetStreak() => Streak = 0;
 }
