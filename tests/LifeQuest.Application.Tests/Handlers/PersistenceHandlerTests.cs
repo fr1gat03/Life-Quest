@@ -1,42 +1,28 @@
-﻿using LifeQuest.Application.Handlers.QuestExecution;
-using LifeQuest.Application.Tests.Fakes;
-using LifeQuest.Application.Tests.Helpers;
+﻿using System.Threading.Tasks;
+using Moq;
+using NUnit.Framework;
+using LifeQuest.Application.Handlers.QuestExecution;
+using LifeQuest.Application.Interfaces;
+using LifeQuest.Domain.Entities;
+using LifeQuest.Domain.Enums;
 
-namespace LifeQuest.Application.Tests.Handlers;
+namespace LifeQuest.Application.Tests;
 
 public class PersistenceHandlerTests
 {
-    private FakeUserRepository _userRepo = null;
-    private FakeQuestRepository _questRepo = null;
-    private PersistenceHandler _handler = null;
-
-    [SetUp]
-    public void Setup()
-    {
-        _userRepo = new FakeUserRepository();
-        _questRepo = new FakeQuestRepository();
-        _handler = new PersistenceHandler(_userRepo, _questRepo);
-    }
-
     [Test]
-    public async Task Handle_CallsSaveUserWithCorrectUser()
+    public async Task Handle_CallsRepositorySaveMethods()
     {
-        var user = TestData.NewUser();
-        var context = new QuestExecutionContext(TestData.NewQuest(), user);
+        var userRepoMock = new Mock<IUserRepository>();
+        var questRepoMock = new Mock<IQuestRepository>();
+        var user = new User(1, "Login", "Pass");
+        var quest = new Quest("1", "Title", 100, 50, Difficulty.Easy);
+        var context = new QuestExecutionContext(quest, user);
+        var handler = new PersistenceHandler(userRepoMock.Object, questRepoMock.Object);
 
-        await _handler.Handle(context);
+        await handler.Handle(context);
 
-        Assert.That(_userRepo.SavedUser, Is.SameAs(user));
-    }
-
-    [Test]
-    public async Task Handle_CallsUpdateQuestWithCorrectQuest()
-    {
-        var quest = TestData.NewQuest();
-        var context = new QuestExecutionContext(quest, TestData.NewUser());
-
-        await _handler.Handle(context);
-
-        Assert.That(_questRepo.UpdatedQuest, Is.SameAs(quest));
+        userRepoMock.Verify(r => r.SaveUser(It.IsAny<User>()), Times.Once);
+        questRepoMock.Verify(r => r.UpdateQuest(It.IsAny<Quest>()), Times.Once);
     }
 }

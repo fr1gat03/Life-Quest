@@ -1,19 +1,20 @@
-﻿using LifeQuest.Domain.Components;
+﻿using System;
+using System.Collections.Generic;
+using LifeQuest.Domain.Components;
 
 namespace LifeQuest.Domain.Entities;
 
 public class QuestCollection
 {
-    private Dictionary<string, Quest> quests = new Dictionary<string, Quest>();
+    public Dictionary<string, Quest> Quests { get; } = new Dictionary<string, Quest>();
 
     public bool RemoveQuest(string id)
     {
-        if (IsNewId(id))
+        if (IsIdInKey(id))
         {
             return false;
         }
-
-        quests.Remove(id);
+        Quests.Remove(id);
         return true;
     }
 
@@ -23,70 +24,50 @@ public class QuestCollection
         {
             throw new ArgumentException("Invalid quest");
         }
-
-        if (!IsNewId(id))
+        if (!IsIdInKey(id))
         {
             return false;
         }
-
-        quests[id] = quest;
+        Quests[id] = quest;
         return true;
     }
 
     public bool ToComplete(string id)
     {
-        if (IsNewId(id))
+        if (IsIdInKey(id))
         {
             return false;
         }
-
-        Quest quest = quests[id];
-
+        Quest quest = Quests[id];
         if (quest.IsCompleted)
         {
-            throw new InvalidOperationException("Quest is completed");
+            throw new InvalidOperationException("Quest in completion");
         }
-
-
         quest.ToComplete();
-
         return true;
     }
 
-    private bool IsNewId(string id)
+    private bool IsIdInKey(string id)
     {
         if (!IsValidId(id))
         {
             throw new ArgumentException("Invalid id");
         }
-
-        if (quests.ContainsKey(id))
-        {
-            return false;
-        }
-
-        return true;
+        return !Quests.ContainsKey(id);
     }
 
     private bool IsValidId(string id)
     {
-        if (id == null)
-        {
-            return false;
-        }
-
-        return true;
+        return id != null;
     }
 
     private bool IsValidQuest(Quest quest)
     {
-        bool correctQuest = true;
-
+        bool currentQuest = true;
         if (quest.Title == null || quest.Title == "")
         {
-            correctQuest = false;
+            currentQuest = false;
         }
-
-        return correctQuest;
+        return currentQuest;
     }
 }
