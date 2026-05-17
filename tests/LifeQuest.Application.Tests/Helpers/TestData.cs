@@ -1,17 +1,17 @@
-﻿using LifeQuest.Domain.Components;
-using LifeQuest.Domain.Entities;
+﻿using LifeQuest.Domain.Entities;
 using LifeQuest.Domain.Enums;
 
-namespace LifeQuest.Application.Tests.Helpers;
+namespace LifeQuest.Application.Tests;
 
 public static class TestData
 {
-    public static Quest NewQuest(bool isCompleted = false)
+    public static Quest NewQuest()
     {
-        var quest = new Quest("Тестовий квест", rewardXp: 50, rewardGold: 10, Difficulty.Medium);
-        if (isCompleted) quest.ToComplete();
-        return quest;
+        return new Quest("1", "Тестовий квест", 100, 50, Difficulty.Medium);
     }
 
-    public static User NewUser() => new(1, "hero", "hash");
+    public static User NewUser()
+    {
+        return new User(1, "TestUser", "hash");
+    }
 }

@@ -1,12 +1,26 @@
-﻿using LifeQuest.Application.Interfaces;
-using LifeQuest.Domain.Components;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LifeQuest.Application.Interfaces;
+using LifeQuest.Domain.Entities;
 
-namespace LifeQuest.Application.Tests.Fakes;
+namespace LifeQuest.Application.Tests;
 
-public sealed class FakeQuestRepository : IQuestRepository
+public class FakeQuestRepository : IQuestRepository
 {
-    public Quest UpdatedQuest { get; private set; }
+    private readonly List<Quest> _quests = new();
 
-    public void UpdateQuest(Quest quest) => UpdatedQuest = quest;
-    public IEnumerable<Quest> GetActiveQuests(int userId) => [];
+    public IEnumerable<Quest> GetActiveQuests(int userId)
+    {
+        return _quests.Where(q => !q.IsCompleted);
+    }
+
+    public void UpdateQuest(Quest quest)
+    {
+        var existing = _quests.FirstOrDefault(q => q.Id == quest.Id);
+        if (existing != null)
+        {
+            _quests.Remove(existing);
+        }
+        _quests.Add(quest);
+    }
 }

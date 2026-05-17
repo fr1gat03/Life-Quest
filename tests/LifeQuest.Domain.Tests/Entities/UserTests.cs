@@ -1,51 +1,61 @@
-﻿namespace LifeQuest.Domain.Tests.Entities;
-
-using LifeQuest.Domain.Components;
+﻿using System;
 using LifeQuest.Domain.Entities;
-using LifeQuest.Domain.Enums;
+using NUnit.Framework;
 
-public class UserTests
+namespace LifeQuest.Domain.Tests
 {
-    private User _user;
-    private Quest _quest;
-
-    [SetUp]
-    public void Setup()
+    [TestFixture]
+    public class UserTests
     {
-        _user = new User(1, "hero", "hash");
-        _quest = new Quest("Квест", 100, 50, Difficulty.Hard);
-    }
+        private User _user;
 
-    [Test]
-    public void IncreaseStreak_IncreasesStreakByOne()
-    {
-        _user.IncreaseStreak();
+        [SetUp]
+        public void Setup()
+        {
+            _user = new User(1, "Login", "Pass");
+        }
 
-        Assert.That(_user.Streak, Is.EqualTo(1));
-    }
+        [Test]
+        public void UpdateGold_IncreasesUserGold()
+        {
+            _user.UpdateGold(50);
+            Assert.That(_user.Gold, Is.EqualTo(50));
+        }
 
-    [Test]
-    public void ResetStreak_SetsStreakToZero()
-    {
-        _user.IncreaseStreak();
-        _user.ResetStreak();
+        [Test]
+        public void UpdateExperience_IncreasesUserXP()
+        {
+            _user.UpdateExperience(100);
+            Assert.That(_user.XP, Is.EqualTo(100));
+        }
 
-        Assert.That(_user.Streak, Is.EqualTo(0));
-    }
+        [Test]
+        public void IncreaseStreak_IncreasesStreakValue()
+        {
+            _user.IncreaseStreak();
+            Assert.That(_user.Streak, Is.EqualTo(1));
+        }
 
-    [Test]
-    public void UpdateGold_AddsGoldToUserStats()
-    {
-        _user.UpdateGold(100);
+        [Test]
+        public void ResetStreak_SetsStreakToZero()
+        {
+            _user.IncreaseStreak();
+            _user.ResetStreak();
+            Assert.That(_user.Streak, Is.EqualTo(0));
+        }
 
-        Assert.That(_user.UserStats.Gold, Is.EqualTo(100));
-    }
+        [Test]
+        public void UpdateGold_AddsGoldToUserStats()
+        {
+            _user.UpdateGold(100);
+            Assert.That(_user.UserStats.Gold, Is.EqualTo(100));
+        }
 
-    [Test]
-    public void UpdateExperience_AddsExperienceToLevel()
-    {
-        _user.UpdateExperience(50);
-
-        Assert.That(_user.UserStats.Level.CurrentExperience, Is.EqualTo(50));
+        [Test]
+        public void UpdateExperience_AddsExperienceToLevel()
+        {
+            _user.UpdateExperience(50);
+            Assert.That(_user.UserStats.Level.CurrentExperience, Is.EqualTo(50));
+        }
     }
 }
