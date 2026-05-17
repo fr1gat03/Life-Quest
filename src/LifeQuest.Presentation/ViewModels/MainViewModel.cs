@@ -38,8 +38,12 @@ public class MainViewModel : ViewModelBase
     
     public void NavigateToSettings(GameViewModel gameVm)
     {
-        // TODO: замінити на SettingsViewModel коли створимо
-        NavigateBackToGame(gameVm);
+        CurrentPage = new SettingsViewModel(
+            gameVm.UserId,
+            gameVm.PlayerName,
+            "",  // TODO: передати реальний ключ
+            () => NavigateBackToGame(gameVm)
+        );
     }
     
     public void NavigateToTavern(GameViewModel gameVm)

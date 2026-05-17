@@ -12,13 +12,14 @@ public class GameViewModel : ViewModelBase
     private readonly MainViewModel _mainNavigator;
 
     
-    // Властивості для UI
+    // Для UI
     
     public string PlayerName => _user.Login;
     public string PlayerLevel => $"Рівень {_user.UserStats.Level.LevelValue}";
     public string AvatarText => _user.Login.Length >= 2
         ? _user.Login[..2].ToUpper()
         : _user.Login.ToUpper();
+    public int UserId => _user.Id;
 
     public int CurrentHp => _user.UserStats.HealthPoints;
     public int MaxHp => 100;
@@ -30,7 +31,6 @@ public class GameViewModel : ViewModelBase
 
     public int Gold => _user.UserStats.Gold;
 
-    // Колекції та команди
     public ObservableCollection<QuestViewModel> ActiveQuests { get; }
     public ICommand OpenCreateQuestCommand { get; }
     public ICommand OpenTavernCommand { get; }
