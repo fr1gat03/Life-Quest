@@ -1,7 +1,8 @@
-﻿namespace LifeQuest.Domain.Tests.Components;
-
-using LifeQuest.Domain.Components;
+﻿using NUnit.Framework;
+using LifeQuest.Domain.Entities;
 using LifeQuest.Domain.Enums;
+
+namespace LifeQuest.Domain.Tests.Components;
 
 public class QuestTests
 {
@@ -10,7 +11,7 @@ public class QuestTests
     [SetUp]
     public void Setup()
     {
-        _quest = new Quest("Знайти артефакт", 100, 25, Difficulty.Medium);
+        _quest = new Quest("1", "Знайти артефакт", 100, 25, Difficulty.Medium);
     }
 
     [Test]
