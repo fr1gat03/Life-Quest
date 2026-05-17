@@ -1,5 +1,6 @@
 ﻿using LifeQuest.Domain.Components;
 using LifeQuest.Domain.Entities;
+using Quest = LifeQuest.Domain.Components.Quest;
 
 namespace LifeQuest.Application.Handlers.QuestExecution;
 

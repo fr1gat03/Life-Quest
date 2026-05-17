@@ -17,8 +17,8 @@ public class User
         UserStats = new UserStats();
 
         Id = id;
-        Login = login;
-        PasswordHash = passwordHash;      
+        Login = login ?? string.Empty;
+        PasswordHash = passwordHash ?? string.Empty;
     }
 
     public bool RemoveQuest(string id)
@@ -46,9 +46,8 @@ public class User
         Streak = 0;
     }
 
-    public void UpdateHeatPoints(int heatPoints)
+    public void UpdateSoulPoints(int SoulPoints)
     {
-        UserStats.UpdateHeatPoints(heatPoints);
     }
 
     public void UpdateGold(int gold)

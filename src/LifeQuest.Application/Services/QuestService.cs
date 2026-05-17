@@ -2,6 +2,7 @@
 using LifeQuest.Application.Interfaces;
 using LifeQuest.Domain.Components;
 using LifeQuest.Domain.Entities;
+using Quest = LifeQuest.Domain.Components.Quest;
 
 namespace LifeQuest.Application.Services;
 
@@ -27,4 +28,4 @@ public class QuestService
         var chain = QuestHandlerChainBuilder.Build(_aiService, _userRepository, _questRepository);
         return await chain.Handle(context);
     }
-} 
+}

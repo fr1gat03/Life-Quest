@@ -47,7 +47,9 @@ public class QuestCollection
             throw new InvalidOperationException("Quest is completed");
         }
 
+
         quest.ToComplete();
+
         return true;
     }
 
@@ -87,4 +89,4 @@ public class QuestCollection
 
         return correctQuest;
     }
-} 
+}
