@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LifeQuest.Presentation.ViewModels"
+             xmlns:models="using:LifeQuest.Application.Interfaces"
+             x:Class="LifeQuest.Presentation.Views.TavernView"
+             x:DataType="vm:TavernViewModel"
+             Background="#1E1E2E">
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="20,20,20,20">
+        
+        <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0,0,0,20">
+            <Button Grid.Column="0" Content="⬅ Назад до гри" Command="{Binding BackCommand}"
+                    Background="#45475A" Foreground="#CDD6F4" CornerRadius="8" Padding="15,8"/>
+            <TextBlock Grid.Column="1" Text="Таверна 'Старий Кодер' 🍻" FontSize="26" FontWeight="Bold" 
+                       Foreground="#CDD6F4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+
+        <Border Grid.Row="1" Background="#181825" CornerRadius="15" Padding="20" BoxShadow="0 5 15 0 #000000">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding ChatHistory}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="models:ChatMessage">
+                            <Border Background="#313244" CornerRadius="10" Padding="15" Margin="0,0,0,15">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Role}" FontWeight="Bold" Foreground="#89B4FA" FontSize="16" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding Text}" Foreground="#CDD6F4" FontSize="14" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,20,0,0">
+            <TextBox Grid.Column="0" Text="{Binding UserInput}" Watermark="Запитай щось у Елдора..."
+                     Background="#313244" Foreground="#CDD6F4" BorderThickness="0" CornerRadius="8" 
+                     Padding="15" Margin="0,0,15,0" FontSize="16"/>
+            
+            <Button Grid.Column="1" Content="Відправити ✉️" Command="{Binding SendCommand}" IsEnabled="{Binding !IsLoading}"
+                    Background="#CBA6F7" Foreground="#11111B" FontWeight="Bold" FontSize="16" 
+                    CornerRadius="8" Padding="25,12"/>
+        </Grid>
+        
+    </Grid>
+</UserControl>
