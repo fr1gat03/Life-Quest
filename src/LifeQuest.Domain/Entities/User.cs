@@ -57,5 +57,6 @@ public class User
 
     public void UpdateExperience(int experience)
     {
+        UserStats.Level.UpdateExperience(experience);
     }
 }
