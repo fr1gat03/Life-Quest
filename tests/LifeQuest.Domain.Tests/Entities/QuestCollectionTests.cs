@@ -3,6 +3,7 @@
 using LifeQuest.Domain.Components;
 using LifeQuest.Domain.Entities;
 using LifeQuest.Domain.Enums;
+using Quest = LifeQuest.Domain.Components.Quest;
 
 public class QuestCollectionTests
 {
@@ -20,25 +21,24 @@ public class QuestCollectionTests
     public void AddQuest_DuplicateId_ReturnsFalse()
     {
         _collection.AddQuest("q1", _quest);
-
         bool result = _collection.AddQuest("q1", _quest);
-
+        
         Assert.That(result, Is.False);
     }
 
     [Test]
     public void AddQuest_NullId_ThrowsArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => _collection.AddQuest(null, _quest));
+        Assert.Throws<ArgumentException>(() => _collection.AddQuest(null!, _quest));
     }
 
     [Test]
     public void ToComplete_MarksQuestAsCompleted()
     {
         _collection.AddQuest("q1", _quest);
-
+        
         _collection.ToComplete("q1");
-
+        
         Assert.That(_quest.IsCompleted, Is.True);
     }
 
@@ -47,7 +47,7 @@ public class QuestCollectionTests
     {
         _collection.AddQuest("q1", _quest);
         _collection.ToComplete("q1");
-
+        
         Assert.Throws<InvalidOperationException>(() => _collection.ToComplete("q1"));
     }
 
@@ -55,7 +55,7 @@ public class QuestCollectionTests
     public void RemoveQuest_NonExistingId_ReturnsFalse()
     {
         bool result = _collection.RemoveQuest("q999");
-
+        
         Assert.That(result, Is.False);
     }
 }
