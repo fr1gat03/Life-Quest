@@ -6,6 +6,8 @@ public class MainViewModel : ViewModelBase
 {
     private ViewModelBase _currentPage;
     private readonly IAiService _aiService;
+    private readonly IUserRepository _userRepository;
+    private readonly IQuestRepository _questRepository;
 
     public ViewModelBase CurrentPage
     {
@@ -13,21 +15,23 @@ public class MainViewModel : ViewModelBase
         set { _currentPage = value; OnPropertyChanged(); }
     }
 
-    public MainViewModel(IAiService aiService)
+    public MainViewModel(IAiService aiService, IUserRepository userRepository, IQuestRepository questRepository)
     {
         _aiService = aiService;
+        _userRepository = userRepository;
+        _questRepository = questRepository;
         _currentPage = new LoginViewModel(this);
     }
 
     public void NavigateToGame(int id, string username)
     {
-        CurrentPage = new GameViewModel(id, username, _aiService, this);
+        CurrentPage = new GameViewModel(id, username, _aiService, _userRepository, this);
     }
 
     public void NavigateToCreateQuest(GameViewModel gameVm)
     {
         CurrentPage = new CreateQuestViewModel(
-            _aiService, 
+            _aiService,
             proposal => {
                 gameVm.AddQuestFromAi(proposal);
                 NavigateBackToGame(gameVm);
@@ -35,33 +39,32 @@ public class MainViewModel : ViewModelBase
             () => NavigateBackToGame(gameVm)
         );
     }
-    
+
     public void NavigateToSettings(GameViewModel gameVm)
     {
         CurrentPage = new SettingsViewModel(
             gameVm.UserId,
             gameVm.PlayerName,
-            "",  // TODO: передати реальний ключ
+            "",
             () => NavigateBackToGame(gameVm)
         );
     }
-    
+
     public void NavigateToTavern(GameViewModel gameVm)
     {
         CurrentPage = new TavernViewModel(
-            _aiService, 
+            _aiService,
             () => NavigateBackToGame(gameVm),
             (npcAdvice) => {
                 var createQuestVm = new CreateQuestViewModel(
-                    _aiService, 
+                    _aiService,
                     proposal => {
                         gameVm.AddQuestFromAi(proposal);
                         NavigateBackToGame(gameVm);
                     },
                     () => NavigateBackToGame(gameVm)
                 );
-                
-                createQuestVm.UserInput = npcAdvice; 
+                createQuestVm.UserInput = npcAdvice;
                 CurrentPage = createQuestVm;
             }
         );
@@ -71,4 +74,4 @@ public class MainViewModel : ViewModelBase
     {
         CurrentPage = gameVm;
     }
-} 
+}

@@ -4,6 +4,7 @@
              xmlns:models="using:LifeQuest.Application.Interfaces"
              x:Class="LifeQuest.Presentation.Views.TavernView"
              x:DataType="vm:TavernViewModel"
+             x:CompileBindings="False"
              Background="#1E1E2E">
 
     <Grid RowDefinitions="Auto, *, Auto" Margin="20,20,20,20">

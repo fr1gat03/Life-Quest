@@ -3,6 +3,7 @@
              xmlns:vm="using:LifeQuest.Presentation.ViewModels"
              x:Class="LifeQuest.Presentation.Views.LoginView"
              x:DataType="vm:LoginViewModel"
+             x:CompileBindings="False"
              Background="#1E1E2E">
              
     <Border Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center" 

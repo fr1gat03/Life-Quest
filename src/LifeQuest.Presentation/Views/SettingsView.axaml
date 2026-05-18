@@ -3,6 +3,7 @@
              xmlns:vm="using:LifeQuest.Presentation.ViewModels"
              x:Class="LifeQuest.Presentation.Views.SettingsView"
              x:DataType="vm:SettingsViewModel"
+             x:CompileBindings="False"
              Background="#0D0A0E">
 
     <ScrollViewer>

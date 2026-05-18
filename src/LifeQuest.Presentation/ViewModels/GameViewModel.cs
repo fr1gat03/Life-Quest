@@ -7,13 +7,11 @@ namespace LifeQuest.Presentation.ViewModels;
 
 public class GameViewModel : ViewModelBase
 {
-    private readonly User _user;
+    private User _user;
     private readonly IAiService _aiService;
+    private readonly IUserRepository _userRepository;
     private readonly MainViewModel _mainNavigator;
 
-    
-    // Для UI
-    
     public string PlayerName => _user.Login;
     public string PlayerLevel => $"Рівень {_user.UserStats.Level.LevelValue}";
     public string AvatarText => _user.Login.Length >= 2
@@ -36,14 +34,22 @@ public class GameViewModel : ViewModelBase
     public ICommand OpenTavernCommand { get; }
     public ICommand OpenSettingsCommand { get; }
 
-    // Єдиний правильний конструктор на 3 параметри!
-    public GameViewModel(int id, string username, IAiService aiService, MainViewModel mainNavigator)
+    public GameViewModel(int id, string username, IAiService aiService, IUserRepository userRepository, MainViewModel mainNavigator)
     {
-        _user = new User(id, username, "dummy_password_hash");
-        _user.UpdateExperience(20);
-
         _aiService = aiService;
+        _userRepository = userRepository;
         _mainNavigator = mainNavigator;
+
+        var existingUser = _userRepository.GetUserById(id);
+        if (existingUser != null)
+        {
+            _user = existingUser;
+        }
+        else
+        {
+            _user = new User(id, username, "");
+            _userRepository.SaveUser(_user);
+        }
 
         ActiveQuests = new ObservableCollection<QuestViewModel>
         {
@@ -57,7 +63,6 @@ public class GameViewModel : ViewModelBase
         OpenSettingsCommand = new RelayCommand(() => _mainNavigator.NavigateToSettings(this));
     }
 
-    // Метод для додавання згенерованого ШІ квесту
     public void AddQuestFromAi(AiQuestProposal proposal)
     {
         var newQuest = new QuestViewModel(
@@ -70,11 +75,11 @@ public class GameViewModel : ViewModelBase
         ActiveQuests.Insert(0, newQuest);
     }
 
-    // Метод виконання квесту
     private void CompleteQuest(QuestViewModel quest)
     {
         _user.UpdateExperience(quest.RewardXp);
         _user.UpdateGold(quest.RewardGold);
+        _userRepository.SaveUser(_user);
 
         OnPropertyChanged(nameof(CurrentXp));
         OnPropertyChanged(nameof(MaxXp));
@@ -82,4 +87,4 @@ public class GameViewModel : ViewModelBase
         OnPropertyChanged(nameof(PlayerLevel));
         OnPropertyChanged(nameof(Gold));
     }
-} 
+}

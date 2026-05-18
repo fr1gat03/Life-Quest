@@ -3,6 +3,7 @@
              xmlns:vm="using:LifeQuest.Presentation.ViewModels"
              x:Class="LifeQuest.Presentation.Views.CreateQuestView"
              x:DataType="vm:CreateQuestViewModel"
+             x:CompileBindings="False"
              Background="#1E1E2E">
              
     <Border Padding="30" Background="#181825" CornerRadius="15" BoxShadow="0 10 30 0 #000000"
