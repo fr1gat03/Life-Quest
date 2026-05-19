@@ -6,5 +6,6 @@ public interface IQuestRepository
 {
     IEnumerable<Quest> GetActiveQuests(int userId);
     Quest? GetQuestById(string id);
+    bool HasAnyQuests(int userId);
     void UpdateQuest(Quest quest);
 }

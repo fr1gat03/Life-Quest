@@ -10,13 +10,12 @@ namespace LifeQuest.Presentation.ViewModels;
 public class TavernViewModel : ViewModelBase
 {
     private readonly IAiService _aiService;
-    private readonly Action _onBack;
+    private Action _onBack;
     private readonly Action<string> _onCreateQuestFromAdvice;
-    
+
     private string _userInput = "";
     private bool _isLoading = false;
 
-    // Повідомлення для відображення в UI
     public ObservableCollection<ChatMessage> ChatHistory { get; } = new();
 
     public string UserInput
@@ -32,8 +31,8 @@ public class TavernViewModel : ViewModelBase
     }
 
     public ICommand SendCommand { get; }
-    public ICommand BackCommand { get; }
-    public ICommand CreateQuestCommand { get; }
+    public ICommand BackCommand { get; private set; }
+    public ICommand CreateQuestFromLastCommand { get; }
 
     public TavernViewModel(IAiService aiService, Action onBack, Action<string> onCreateQuestFromAdvice)
     {
@@ -41,19 +40,34 @@ public class TavernViewModel : ViewModelBase
         _onBack = onBack;
         _onCreateQuestFromAdvice = onCreateQuestFromAdvice;
 
-        SendCommand = new RelayCommand(async () => await SendMessage());
         BackCommand = new RelayCommand(() => _onBack());
-        
-        ChatHistory.Add(new ChatMessage { Role = "🧙‍♂️ Гаррі", Text = "Вітаю, мандрівнику! Я Гаррі. Розкажи мені про свою велику ціль, і я допоможу розбити її на дрібні квести." });
-        
-        CreateQuestCommand = new RelayCommand(() => 
+
+        SendCommand = new RelayCommand(async () => await SendMessage());
+
+        CreateQuestFromLastCommand = new RelayCommand(() =>
         {
-            var lastNpcMsg = ChatHistory.LastOrDefault(m => m.Role.Contains("Елдор"))?.Text;
+            var lastNpcMsg = ChatHistory
+                .LastOrDefault(m => m.Role.Contains("Елдор"))?.Text;
+
             if (!string.IsNullOrEmpty(lastNpcMsg))
-            {
                 _onCreateQuestFromAdvice(lastNpcMsg);
-            }
         });
+
+        if (ChatHistory.Count == 0)
+        {
+            ChatHistory.Add(new ChatMessage
+            {
+                Role = "🧙‍♂️ Елдор",
+                Text = "Вітаю, мандрівнику! Я Елдор. Розкажи мені про свою велику ціль, і я допоможу розбити її на дрібні квести."
+            });
+        }
+    }
+
+    public void UpdateBackCallback(Action newOnBack)
+    {
+        _onBack = newOnBack;
+        BackCommand = new RelayCommand(() => _onBack());
+        OnPropertyChanged(nameof(BackCommand));
     }
 
     private async Task SendMessage()
@@ -63,15 +77,12 @@ public class TavernViewModel : ViewModelBase
         var msg = UserInput;
         UserInput = "";
 
-        // Повідомлення гравця
         ChatHistory.Add(new ChatMessage { Role = "😎 Ти", Text = msg });
         IsLoading = true;
 
-        // Запит до Gemini
         var historyList = new System.Collections.Generic.List<ChatMessage>(ChatHistory);
         var response = await _aiService.GetNpcResponse(msg, historyList);
 
-        // Відповідь NPC
         ChatHistory.Add(new ChatMessage { Role = "🧙‍♂️ Елдор", Text = response });
         IsLoading = false;
     }

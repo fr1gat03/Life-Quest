@@ -85,35 +85,31 @@ public class GeminiAiService : IAiService
 
     public async Task<string> GetNpcResponse(string userMessage, List<ChatMessage> history)
     {
+        var prompt = $@"Ти мудрий NPC Елдор у таверні фентезійної RPG гри. 
+Відповідай ТІЛЬКИ простим текстом БЕЗ markdown розмітки (без **, ##, *, - та інших символів).
+Повідомлення гравця: {userMessage}";
+
         try
         {
             var response = await _client.Models.GenerateContentAsync(
-                "gemini-2.0-flash-lite",
-                userMessage
-            );
+                "gemini-3.1-flash-lite-preview", prompt);
             return response.Text ?? "Мої магічні канали забиті.";
         }
         catch
         {
-            return "Ех... Темна магія перебиває мій зв'язок із сервером. Запитай трохи пізніше.";
+            return "Ех... Темна магія перебиває мій зв'язок із сервером.";
         }
     }
 
     public async Task<string> GenerateMotivationMessage(string questTitle)
     {
-        var prompt = $"Коротка мотивація (1 речення) для квесту: {questTitle}";
+        var prompt = $"Напиши коротку мотивацію (1 речення) для виконання квесту '{questTitle}'. Тільки простий текст без markdown.";
         try
         {
-            var response = await _client.Models.GenerateContentAsync(
-                "gemini-2.0-flash-lite",
-                prompt
-            );
+            var response = await _client.Models.GenerateContentAsync("using LifeQuest.Application.Interfaces;\nusing LifeQuest.Domain.Entities;\nusing LifeQuest.Infrastructure.Data;\nusing System.Collections.Generic;\nusing System.Linq;\n\nnamespace LifeQuest.Infrastructure.Repositories;\n\npublic class QuestRepository : IQuestRepository\n{\n    private readonly LifeQuestDbContext _context;\n\n    public QuestRepository(LifeQuestDbContext context)\n    {\n        _context = context;\n    }\n\n    public IEnumerable<Quest> GetActiveQuests(int userId)\n    {\n        return _context.Quests\n            .Where(q => !q.IsCompleted && q.UserId == userId)\n            .ToList();\n    }\n\n    public Quest? GetQuestById(string id)\n    {\n        return _context.Quests.Find(id);\n    }\n\n    public void UpdateQuest(Quest quest)\n    {\n        // Find перевіряє спочатку локальний кеш EF, потім БД\n        var existing = _context.Quests.Find(quest.Id);\n\n        if (existing == null)\n        {\n            // Новий квест — додаємо\n            _context.Quests.Add(quest);\n        }\n        else\n        {\n            // Існуючий — копіюємо нові значення в відстежуваний об'єкт\n            _context.Entry(existing).CurrentValues.SetValues(quest);\n        }\n\n        _context.SaveChanges();\n    }\n}", prompt);
             return response.Text ?? "Ти молодець!";
         }
-        catch
-        {
-            return "Чудова робота!";
-        }
+        catch { return "Чудова робота!"; }
     }
 
     private string CleanJson(string? text)

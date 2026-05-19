@@ -1,4 +1,5 @@
 using LifeQuest.Application.Interfaces;
+using LifeQuest.Application.Services;
 
 namespace LifeQuest.Presentation.ViewModels;
 
@@ -8,6 +9,7 @@ public class MainViewModel : ViewModelBase
     private readonly IAiService _aiService;
     private readonly IUserRepository _userRepository;
     private readonly IQuestRepository _questRepository;
+    private readonly QuestService _questService;
 
     public ViewModelBase CurrentPage
     {
@@ -20,12 +22,18 @@ public class MainViewModel : ViewModelBase
         _aiService = aiService;
         _userRepository = userRepository;
         _questRepository = questRepository;
+
+        _questService = new QuestService(_aiService, _userRepository, _questRepository);
+
         _currentPage = new LoginViewModel(this, _userRepository);
     }
 
     public void NavigateToGame(int id, string username)
     {
-        CurrentPage = new GameViewModel(id, username, _aiService, _userRepository, _questRepository, this);
+        CurrentPage = new GameViewModel(
+            id, username, _questService,
+            _userRepository, _questRepository, this
+        );
     }
 
     public void NavigateToCreateQuest(GameViewModel gameVm)
@@ -48,31 +56,44 @@ public class MainViewModel : ViewModelBase
             "",
             _userRepository,
             (newUsername) => {
-                gameVm.RefreshAfterSettings(); // ← оновлюємо GameView
+                gameVm.RefreshAfterSettings();
                 NavigateBackToGame(gameVm);
             },
             () => NavigateBackToGame(gameVm)
         );
     }
 
+    private TavernViewModel? _cachedTavern;
+    private GameViewModel? _cachedTavernOwner;
+
     public void NavigateToTavern(GameViewModel gameVm)
     {
-        CurrentPage = new TavernViewModel(
-            _aiService,
-            () => NavigateBackToGame(gameVm),
-            (npcAdvice) => {
-                var createQuestVm = new CreateQuestViewModel(
-                    _aiService,
-                    proposal => {
-                        gameVm.AddQuestFromAi(proposal);
-                        NavigateBackToGame(gameVm);
-                    },
-                    () => NavigateBackToGame(gameVm)
-                );
-                createQuestVm.UserInput = npcAdvice;
-                CurrentPage = createQuestVm;
-            }
-        );
+        if (_cachedTavern == null || _cachedTavernOwner != gameVm)
+        {
+            _cachedTavern = new TavernViewModel(
+                _aiService,
+                () => NavigateBackToGame(gameVm),
+                (npcAdvice) => {
+                    var createQuestVm = new CreateQuestViewModel(
+                        _aiService,
+                        proposal => {
+                            gameVm.AddQuestFromAi(proposal);
+                            NavigateBackToGame(gameVm);
+                        },
+                        () => NavigateBackToGame(gameVm)
+                    );
+                    createQuestVm.UserInput = npcAdvice;
+                    CurrentPage = createQuestVm;
+                }
+            );
+            _cachedTavernOwner = gameVm;
+        }
+        else
+        {
+            _cachedTavern.UpdateBackCallback(() => NavigateBackToGame(gameVm));
+        }
+
+        CurrentPage = _cachedTavern;
     }
 
     private void NavigateBackToGame(GameViewModel gameVm)

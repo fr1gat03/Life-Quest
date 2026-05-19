@@ -1,19 +1,23 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using LifeQuest.Domain.Entities;
 using LifeQuest.Domain.Enums;
 using LifeQuest.Application.Interfaces;
+using LifeQuest.Application.Services;
 
 namespace LifeQuest.Presentation.ViewModels;
 
 public class GameViewModel : ViewModelBase
 {
     private User _user;
-    private readonly IAiService _aiService;
+    private readonly QuestService _questService;
     private readonly IUserRepository _userRepository;
     private readonly IQuestRepository _questRepository;
     private readonly MainViewModel _mainNavigator;
+
+    private string _motivationMessage = "";
 
     public string PlayerName => _user.Login;
     public string PlayerLevel => $"Рівень {_user.UserStats.Level.LevelValue}";
@@ -32,16 +36,24 @@ public class GameViewModel : ViewModelBase
 
     public int Gold => _user.UserStats.Gold;
 
+    public string MotivationMessage
+    {
+        get => _motivationMessage;
+        set { _motivationMessage = value; OnPropertyChanged(); }
+    }
+
+    public bool HasMotivation => !string.IsNullOrEmpty(_motivationMessage);
+
     public ObservableCollection<QuestViewModel> ActiveQuests { get; } = new();
     public ICommand OpenCreateQuestCommand { get; }
     public ICommand OpenTavernCommand { get; }
     public ICommand OpenSettingsCommand { get; }
 
-    public GameViewModel(int id, string username, IAiService aiService,
+    public GameViewModel(int id, string username, QuestService questService,
         IUserRepository userRepository, IQuestRepository questRepository,
         MainViewModel mainNavigator)
     {
-        _aiService = aiService;
+        _questService = questService;
         _userRepository = userRepository;
         _questRepository = questRepository;
         _mainNavigator = mainNavigator;
@@ -52,7 +64,6 @@ public class GameViewModel : ViewModelBase
             _userRepository.SaveUser(_user);
 
         LoadQuestsFromDb();
-
         if (ActiveQuests.Count == 0)
             AddDefaultQuests();
 
@@ -75,6 +86,8 @@ public class GameViewModel : ViewModelBase
                 CompleteQuest
             ));
         }
+        if (!_questRepository.HasAnyQuests(_user.Id))
+            AddDefaultQuests();
     }
 
     private void AddDefaultQuests()
@@ -104,42 +117,42 @@ public class GameViewModel : ViewModelBase
     {
         var difficulty = Enum.TryParse<Difficulty>(proposal.Difficulty, out var d) ? d : Difficulty.Medium;
         var questId = Guid.NewGuid().ToString();
-
         var quest = new Quest(questId, proposal.Title, proposal.RewardXp,
             proposal.RewardGold, difficulty, _user.Id);
 
         _questRepository.UpdateQuest(quest);
-
         ActiveQuests.Insert(0, new QuestViewModel(
-            questId,
-            quest.Title,
-            quest.RewardXp,
-            quest.RewardGold,
-            proposal.Difficulty,
-            CompleteQuest
+            questId, quest.Title, quest.RewardXp,
+            quest.RewardGold, proposal.Difficulty, CompleteQuest
         ));
     }
 
-    private void CompleteQuest(QuestViewModel questVm)
+    private async Task CompleteQuest(QuestViewModel questVm)
     {
-        _user.UpdateExperience(questVm.RewardXp);
-        _user.UpdateGold(questVm.RewardGold);
-        _userRepository.SaveUser(_user);
-
         var quest = _questRepository.GetQuestById(questVm.QuestId);
-        if (quest != null)
-        {
-            quest.ToComplete();
-            _questRepository.UpdateQuest(quest);
-        }
+        if (quest == null) return;
 
-        OnPropertyChanged(nameof(CurrentXp));
-        OnPropertyChanged(nameof(MaxXp));
-        OnPropertyChanged(nameof(XpText));
-        OnPropertyChanged(nameof(PlayerLevel));
-        OnPropertyChanged(nameof(Gold));
+        var result = await _questService.CompleteQuestAsync(quest, _user);
+
+        if (result.IsSuccess)
+        {
+            var updatedUser = _userRepository.GetUserById(_user.Id);
+            if (updatedUser != null) _user = updatedUser;
+
+            if (!string.IsNullOrEmpty(result.MotivationMessage))
+            {
+                MotivationMessage = $"✨ {result.MotivationMessage}";
+                OnPropertyChanged(nameof(HasMotivation));
+            }
+
+            OnPropertyChanged(nameof(CurrentXp));
+            OnPropertyChanged(nameof(MaxXp));
+            OnPropertyChanged(nameof(XpText));
+            OnPropertyChanged(nameof(PlayerLevel));
+            OnPropertyChanged(nameof(Gold));
+        }
     }
-    
+
     public void RefreshAfterSettings()
     {
         var updatedUser = _userRepository.GetUserById(_user.Id);
