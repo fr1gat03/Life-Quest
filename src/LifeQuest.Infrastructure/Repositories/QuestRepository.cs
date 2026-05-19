@@ -17,12 +17,26 @@ public class QuestRepository : IQuestRepository
 
     public IEnumerable<Quest> GetActiveQuests(int userId)
     {
-        return _context.Quests.Where(q => !q.IsCompleted).ToList();
+        return _context.Quests
+            .Where(q => !q.IsCompleted && q.UserId == userId)
+            .ToList();
+    }
+
+    public Quest? GetQuestById(string id)
+    {
+        return _context.Quests.FirstOrDefault(q => q.Id == id);
     }
 
     public void UpdateQuest(Quest quest)
     {
-        _context.Quests.Update(quest);
+        if (!_context.Quests.Any(q => q.Id == quest.Id))
+        {
+            _context.Quests.Add(quest);
+        }
+        else
+        {
+            _context.Quests.Update(quest);
+        }
         _context.SaveChanges();
     }
 }

@@ -14,9 +14,14 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public User GetUserById(int id)
+    public User? GetUserById(int id)
     {
-        return _context.Users.FirstOrDefault(u => u.Id == id)!;
+        return _context.Users.FirstOrDefault(u => u.Id == id);
+    }
+
+    public User? GetUserByLogin(string login)
+    {
+        return _context.Users.FirstOrDefault(u => u.Login == login);
     }
 
     public void SaveUser(User user)
@@ -29,7 +34,6 @@ public class UserRepository : IUserRepository
         {
             _context.Users.Update(user);
         }
-
         _context.SaveChanges();
     }
 }

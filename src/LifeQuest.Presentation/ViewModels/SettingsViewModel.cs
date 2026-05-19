@@ -1,12 +1,15 @@
 using System;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using LifeQuest.Application.Interfaces;
 
 namespace LifeQuest.Presentation.ViewModels;
 
 public class SettingsViewModel : ViewModelBase
 {
     private readonly Action _onBack;
+    private readonly Action<string> _onUsernameSaved;
+    private readonly IUserRepository _userRepository;
 
     private string _username = "";
     private string _apiKey = "";
@@ -49,26 +52,45 @@ public class SettingsViewModel : ViewModelBase
     public ICommand BackCommand { get; }
     public ICommand SelectAvatarCommand { get; }
 
-    public SettingsViewModel(int heroId, string username, string currentApiKey, Action onBack)
+    public SettingsViewModel(int heroId, string username, string currentApiKey,
+        IUserRepository userRepository, Action<string> onUsernameSaved, Action onBack)
     {
         HeroId = heroId;
         _username = username;
         _apiKey = currentApiKey;
+        _userRepository = userRepository;
+        _onUsernameSaved = onUsernameSaved;
         _onBack = onBack;
 
         BackCommand = new RelayCommand(() => _onBack());
+        SelectAvatarCommand = new RelayCommand(() => { });
 
         SaveCommand = new RelayCommand(() =>
         {
-            // TODO: зберегти в БД коли буде Infrastructure
-            StatusMessage = "✅ Зміни збережено!";
+            if (string.IsNullOrWhiteSpace(Username))
+            {
+                StatusMessage = "⚠️ Ім'я не може бути порожнім";
+                return;
+            }
+
+            var user = _userRepository.GetUserById(HeroId);
+            if (user != null)
+            {
+                user.UpdateLogin(Username);
+                _userRepository.SaveUser(user);
+                StatusMessage = "✅ Зміни збережено!";
+
+                _onUsernameSaved(Username);
+            }
+            else
+            {
+                StatusMessage = "❌ Помилка: юзера не знайдено";
+            }
         });
 
         ResetProgressCommand = new RelayCommand(() =>
         {
             StatusMessage = "⚠️ Прогрес скинуто (TODO: підключити до БД)";
         });
-
-        SelectAvatarCommand = new RelayCommand(() => { });
     }
 }

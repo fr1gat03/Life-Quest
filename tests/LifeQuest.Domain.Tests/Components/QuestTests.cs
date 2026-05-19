@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using LifeQuest.Domain.Components;
+using NUnit.Framework;
 using LifeQuest.Domain.Entities;
 using LifeQuest.Domain.Enums;
 

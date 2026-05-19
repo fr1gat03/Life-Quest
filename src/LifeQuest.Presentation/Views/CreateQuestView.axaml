@@ -12,7 +12,7 @@
             <TextBlock Text="📜 Новий Квест" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#CDD6F4"/>
             
             <TextBlock Text="Опиши задачу своїми словами:" Foreground="#A6ADC8"/>
-            <TextBox Text="{Binding UserInput}" Watermark="Наприклад: помити посуд або пробігти 5 км" 
+            <TextBox Text="{Binding UserInput}" PlaceholderText="Наприклад: помити посуд або пробігти 5 км" 
                      Height="60" TextWrapping="Wrap" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
             
             <Button Content="✨ Згенерувати баланс через ШІ" Command="{Binding GenerateCommand}"

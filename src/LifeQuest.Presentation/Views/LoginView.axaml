@@ -5,28 +5,45 @@
              x:DataType="vm:LoginViewModel"
              x:CompileBindings="False"
              Background="#1E1E2E">
-             
-    <Border Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center" 
+
+    <Border Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center"
             Background="#181825" CornerRadius="15" BoxShadow="0 10 30 0 #000000">
-        
-        <StackPanel Spacing="15" Width="280">
+
+        <StackPanel Spacing="15" Width="300">
             <TextBlock Text="⚔️" FontSize="50" HorizontalAlignment="Center"/>
-            <TextBlock Text="Life Quest" FontSize="26" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#CDD6F4"/>
-            <TextBlock Text="Увійдіть, щоб продовжити" FontSize="14" HorizontalAlignment="Center" Foreground="#A6ADC8" Margin="0,0,0,10"/>
+            <TextBlock Text="Life Quest" FontSize="26" FontWeight="Bold"
+                       HorizontalAlignment="Center" Foreground="#CDD6F4"/>
+            <TextBlock Text="Увійдіть або створіть акаунт" FontSize="13"
+                       HorizontalAlignment="Center" Foreground="#A6ADC8"
+                       Margin="0,0,0,10"/>
 
             <TextBlock Text="Логін" Foreground="#CDD6F4" FontSize="14"/>
-            <TextBox Text="{Binding Username}" Watermark="Введіть ваш логін..." 
-                     Background="#313244" Foreground="#CDD6F4" BorderThickness="0" CornerRadius="8"/>
-            
-            <TextBlock Text="Пароль" Foreground="#CDD6F4" FontSize="14" Margin="0,10,0,0"/>
-            <TextBox Text="{Binding Password}" PasswordChar="*" Watermark="••••••••" 
-                     Background="#313244" Foreground="#CDD6F4" BorderThickness="0" CornerRadius="8"/>
+            <TextBox Text="{Binding Username}"
+                     PlaceholderText="Введіть ваш логін..."
+                     Background="#313244" Foreground="#CDD6F4"
+                     BorderThickness="0" CornerRadius="8"/>
 
-            <Button Content="Увійти" Command="{Binding LoginCommand}"
+            <TextBlock Text="Пароль" Foreground="#CDD6F4" FontSize="14" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding Password}" PasswordChar="*"
+                     PlaceholderText="••••••••"
+                     Background="#313244" Foreground="#CDD6F4"
+                     BorderThickness="0" CornerRadius="8"/>
+
+            <TextBlock Text="{Binding ErrorMessage}"
+                       Foreground="#F38BA8" FontSize="12"
+                       TextWrapping="Wrap" HorizontalAlignment="Center"/>
+
+            <Button Content="⚔️ Увійти" Command="{Binding LoginCommand}"
                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                    Background="#89B4FA" Foreground="#11111B" FontWeight="Bold" 
-                    Padding="12" CornerRadius="8" Margin="0,20,0,0"/>
+                    Background="#89B4FA" Foreground="#11111B"
+                    FontWeight="Bold" Padding="12" CornerRadius="8"
+                    Margin="0,10,0,0"/>
+
+            <Button Content="📜 Зареєструватись" Command="{Binding RegisterCommand}"
+                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                    Background="#313244" Foreground="#CDD6F4"
+                    FontWeight="Bold" Padding="12" CornerRadius="8"/>
         </StackPanel>
-        
+
     </Border>
 </UserControl>

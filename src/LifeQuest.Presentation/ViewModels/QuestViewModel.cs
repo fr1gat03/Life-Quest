@@ -8,6 +8,7 @@ public class QuestViewModel : ViewModelBase
 {
     private bool _isCompleted;
 
+    public string QuestId { get; }
     public string Title { get; }
     public int RewardXp { get; }
     public int RewardGold { get; }
@@ -35,10 +36,14 @@ public class QuestViewModel : ViewModelBase
         set { _isCompleted = value; OnPropertyChanged(); }
     }
 
+    public bool IsNotCompleted => !IsCompleted;
+
     public ICommand CompleteCommand { get; }
 
-    public QuestViewModel(string title, int rewardXp, int rewardGold, string difficulty, Action<QuestViewModel> onComplete)
+    public QuestViewModel(string questId, string title, int rewardXp, int rewardGold,
+        string difficulty, Action<QuestViewModel> onComplete)
     {
+        QuestId = questId;
         Title = title;
         RewardXp = rewardXp;
         RewardGold = rewardGold;
@@ -49,6 +54,7 @@ public class QuestViewModel : ViewModelBase
             if (!IsCompleted)
             {
                 IsCompleted = true;
+                OnPropertyChanged(nameof(IsNotCompleted));
                 onComplete(this);
             }
         });

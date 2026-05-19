@@ -66,5 +66,11 @@ namespace LifeQuest.Domain.Entities
         {
             this.UserStats.UpdateGold(gold);
         }
+        
+        public void UpdateLogin(string newLogin)
+        {
+            if (!string.IsNullOrEmpty(newLogin))
+                Login = newLogin;
+        }
     }
 }

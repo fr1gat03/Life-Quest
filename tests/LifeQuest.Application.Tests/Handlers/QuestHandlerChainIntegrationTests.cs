@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using LifeQuest.Application.Handlers.QuestExecution;
 using LifeQuest.Application.Interfaces;
+using LifeQuest.Domain.Components;
 using LifeQuest.Domain.Entities;
 using LifeQuest.Domain.Enums;
 using Moq;

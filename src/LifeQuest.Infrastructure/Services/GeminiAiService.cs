@@ -2,34 +2,35 @@ using System;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Google.GenAI; 
-using LifeQuest.Application.Interfaces; 
+using Google.GenAI;
+using LifeQuest.Application.Interfaces;
 
 namespace LifeQuest.Infrastructure.Services;
 
 public class GeminiAiService : IAiService
 {
     private readonly string _apiKey;
-    
+    private readonly Client _client;
+
+    private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     public GeminiAiService(string apiKey)
     {
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new ArgumentException("Gemini API key is not configured.");
         _apiKey = apiKey;
+        _client = new Client(apiKey: _apiKey);
     }
-
-    private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions 
-    { 
-        PropertyNameCaseInsensitive = true 
-    };
 
     public async Task<AiQuestProposal> AnalyzeAndBalanceQuest(string userInput)
     {
-        var client = new Client(apiKey: _apiKey); 
         var prompt = $@"
         Ти гейм-дизайнер. Користувач хоче виконати задачу: '{userInput}'.
         Оціни складність (Easy, Medium, Hard) і призначи XP (від 10 до 200) та Gold (від 5 до 100).
-        Формат (ТІЛЬКИ JSON):
+        Формат (ТІЛЬКИ JSON, без жодного тексту):
         {{
             ""Title"": ""Назва"",
             ""Difficulty"": ""Medium"",
@@ -39,30 +40,28 @@ public class GeminiAiService : IAiService
 
         try
         {
-            var response = await client.Models.GenerateContentAsync(
+            var response = await _client.Models.GenerateContentAsync(
                 "gemini-3.1-flash-lite-preview",
                 prompt
             );
-
             var jsonText = CleanJson(response.Text);
-            var questProposal = JsonSerializer.Deserialize<AiQuestProposal>(jsonText, _jsonOptions);
-            return questProposal ?? GetFallbackQuest(userInput);
+            return JsonSerializer.Deserialize<AiQuestProposal>(jsonText, _jsonOptions)
+                   ?? GetFallbackQuest(userInput);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Помилка: {ex.Message}");
+            Console.WriteLine($"Помилка AnalyzeAndBalanceQuest: {ex.Message}");
             return GetFallbackQuest(userInput);
         }
     }
 
     public async Task<FairnessVerdict> ValidateQuestFairness(AiQuestProposal userEditedQuest)
     {
-        var client = new Client(apiKey: _apiKey);
         var prompt = $@"
         Ти суворий Гейм-Майстер. Перевір квест: '{userEditedQuest.Title}'.
         Нагорода: {userEditedQuest.RewardXp} XP, {userEditedQuest.RewardGold} Gold.
-        Якщо нагорода занадто велика для цієї дії - IsFair: false. Якщо адекватна - true.
-        Формат (ТІЛЬКИ JSON):
+        Якщо нагорода занадто велика - IsFair: false. Якщо адекватна - true.
+        Формат (ТІЛЬКИ JSON, без жодного тексту):
         {{
             ""IsFair"": true,
             ""Feedback"": ""Твій коментар""
@@ -70,13 +69,12 @@ public class GeminiAiService : IAiService
 
         try
         {
-            var response = await client.Models.GenerateContentAsync(
-                "gemini-3.1-flash-lite-preview", 
+            var response = await _client.Models.GenerateContentAsync(
+                "gemini-3.1-flash-lite-preview",
                 prompt
             );
-            
             var jsonText = CleanJson(response.Text);
-            return JsonSerializer.Deserialize<FairnessVerdict>(jsonText, _jsonOptions) 
+            return JsonSerializer.Deserialize<FairnessVerdict>(jsonText, _jsonOptions)
                    ?? new FairnessVerdict { IsFair = false, Feedback = "Помилка парсингу" };
         }
         catch
@@ -87,11 +85,10 @@ public class GeminiAiService : IAiService
 
     public async Task<string> GetNpcResponse(string userMessage, List<ChatMessage> history)
     {
-        var client = new Client(apiKey: _apiKey);
-        try 
+        try
         {
-            var response = await client.Models.GenerateContentAsync(
-                "gemini-3.1-flash-lite-preview", 
+            var response = await _client.Models.GenerateContentAsync(
+                "gemini-2.0-flash-lite",
                 userMessage
             );
             return response.Text ?? "Мої магічні канали забиті.";
@@ -104,19 +101,26 @@ public class GeminiAiService : IAiService
 
     public async Task<string> GenerateMotivationMessage(string questTitle)
     {
-        var client = new Client(apiKey: _apiKey);
-        var prompt = $"Коротка мотивація для квесту: {questTitle}";
+        var prompt = $"Коротка мотивація (1 речення) для квесту: {questTitle}";
         try
         {
-            var response = await client.Models.GenerateContentAsync("gemini-3.1-flash-lite-preview", prompt);
+            var response = await _client.Models.GenerateContentAsync(
+                "gemini-2.0-flash-lite",
+                prompt
+            );
             return response.Text ?? "Ти молодець!";
         }
-        catch { return "Чудова робота!"; }
+        catch
+        {
+            return "Чудова робота!";
+        }
     }
 
-    private string CleanJson(string text)
+    private string CleanJson(string? text)
     {
-        return string.IsNullOrEmpty(text) ? "" : text.Replace("```json", "").Replace("```", "").Trim();
+        return string.IsNullOrEmpty(text)
+            ? ""
+            : text.Replace("```json", "").Replace("```", "").Trim();
     }
 
     private AiQuestProposal GetFallbackQuest(string input)

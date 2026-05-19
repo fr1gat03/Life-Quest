@@ -1,6 +1,8 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using LifeQuest.Domain.Entities;
+using LifeQuest.Domain.Enums;
 using LifeQuest.Application.Interfaces;
 
 namespace LifeQuest.Presentation.ViewModels;
@@ -10,6 +12,7 @@ public class GameViewModel : ViewModelBase
     private User _user;
     private readonly IAiService _aiService;
     private readonly IUserRepository _userRepository;
+    private readonly IQuestRepository _questRepository;
     private readonly MainViewModel _mainNavigator;
 
     public string PlayerName => _user.Login;
@@ -29,62 +32,122 @@ public class GameViewModel : ViewModelBase
 
     public int Gold => _user.UserStats.Gold;
 
-    public ObservableCollection<QuestViewModel> ActiveQuests { get; }
+    public ObservableCollection<QuestViewModel> ActiveQuests { get; } = new();
     public ICommand OpenCreateQuestCommand { get; }
     public ICommand OpenTavernCommand { get; }
     public ICommand OpenSettingsCommand { get; }
 
-    public GameViewModel(int id, string username, IAiService aiService, IUserRepository userRepository, MainViewModel mainNavigator)
+    public GameViewModel(int id, string username, IAiService aiService,
+        IUserRepository userRepository, IQuestRepository questRepository,
+        MainViewModel mainNavigator)
     {
         _aiService = aiService;
         _userRepository = userRepository;
+        _questRepository = questRepository;
         _mainNavigator = mainNavigator;
 
         var existingUser = _userRepository.GetUserById(id);
-        if (existingUser != null)
-        {
-            _user = existingUser;
-        }
-        else
-        {
-            _user = new User(id, username, "");
+        _user = existingUser ?? new User(id, username, "");
+        if (existingUser == null)
             _userRepository.SaveUser(_user);
-        }
 
-        ActiveQuests = new ObservableCollection<QuestViewModel>
-        {
-            new QuestViewModel("⚔️ Перше випробування: Привіт світ!", 50, 10, "Medium", CompleteQuest),
-            new QuestViewModel("📜 Прочитай 📝Tasks в тг каналі", 30, 5, "Easy", CompleteQuest),
-            new QuestViewModel("🧪 Протестувати нарахування досвіду 🤯", 100, 20, "Hard", CompleteQuest)
-        };
+        LoadQuestsFromDb();
+
+        if (ActiveQuests.Count == 0)
+            AddDefaultQuests();
 
         OpenCreateQuestCommand = new RelayCommand(() => _mainNavigator.NavigateToCreateQuest(this));
         OpenTavernCommand = new RelayCommand(() => _mainNavigator.NavigateToTavern(this));
         OpenSettingsCommand = new RelayCommand(() => _mainNavigator.NavigateToSettings(this));
     }
 
-    public void AddQuestFromAi(AiQuestProposal proposal)
+    private void LoadQuestsFromDb()
     {
-        var newQuest = new QuestViewModel(
-            proposal.Title,
-            proposal.RewardXp,
-            proposal.RewardGold,
-            proposal.Difficulty,
-            CompleteQuest
-        );
-        ActiveQuests.Insert(0, newQuest);
+        var quests = _questRepository.GetActiveQuests(_user.Id);
+        foreach (var quest in quests)
+        {
+            ActiveQuests.Add(new QuestViewModel(
+                quest.Id,
+                quest.Title,
+                quest.RewardXp,
+                quest.RewardGold,
+                quest.Difficulty.ToString(),
+                CompleteQuest
+            ));
+        }
     }
 
-    private void CompleteQuest(QuestViewModel quest)
+    private void AddDefaultQuests()
     {
-        _user.UpdateExperience(quest.RewardXp);
-        _user.UpdateGold(quest.RewardGold);
+        var defaultQuests = new[]
+        {
+            new Quest(Guid.NewGuid().ToString(), "⚔️ Перше випробування: Привіт світ!", 50, 10, Difficulty.Medium, _user.Id),
+            new Quest(Guid.NewGuid().ToString(), "📜 Прочитай Tasks в тг каналі", 30, 5, Difficulty.Easy, _user.Id),
+            new Quest(Guid.NewGuid().ToString(), "🧪 Протестувати нарахування досвіду", 100, 20, Difficulty.Hard, _user.Id)
+        };
+
+        foreach (var quest in defaultQuests)
+        {
+            _questRepository.UpdateQuest(quest);
+            ActiveQuests.Add(new QuestViewModel(
+                quest.Id,
+                quest.Title,
+                quest.RewardXp,
+                quest.RewardGold,
+                quest.Difficulty.ToString(),
+                CompleteQuest
+            ));
+        }
+    }
+
+    public void AddQuestFromAi(AiQuestProposal proposal)
+    {
+        var difficulty = Enum.TryParse<Difficulty>(proposal.Difficulty, out var d) ? d : Difficulty.Medium;
+        var questId = Guid.NewGuid().ToString();
+
+        var quest = new Quest(questId, proposal.Title, proposal.RewardXp,
+            proposal.RewardGold, difficulty, _user.Id);
+
+        _questRepository.UpdateQuest(quest);
+
+        ActiveQuests.Insert(0, new QuestViewModel(
+            questId,
+            quest.Title,
+            quest.RewardXp,
+            quest.RewardGold,
+            proposal.Difficulty,
+            CompleteQuest
+        ));
+    }
+
+    private void CompleteQuest(QuestViewModel questVm)
+    {
+        _user.UpdateExperience(questVm.RewardXp);
+        _user.UpdateGold(questVm.RewardGold);
         _userRepository.SaveUser(_user);
+
+        var quest = _questRepository.GetQuestById(questVm.QuestId);
+        if (quest != null)
+        {
+            quest.ToComplete();
+            _questRepository.UpdateQuest(quest);
+        }
 
         OnPropertyChanged(nameof(CurrentXp));
         OnPropertyChanged(nameof(MaxXp));
         OnPropertyChanged(nameof(XpText));
         OnPropertyChanged(nameof(PlayerLevel));
         OnPropertyChanged(nameof(Gold));
+    }
+    
+    public void RefreshAfterSettings()
+    {
+        var updatedUser = _userRepository.GetUserById(_user.Id);
+        if (updatedUser != null)
+        {
+            _user = updatedUser;
+            OnPropertyChanged(nameof(PlayerName));
+            OnPropertyChanged(nameof(AvatarText));
+        }
     }
 }
