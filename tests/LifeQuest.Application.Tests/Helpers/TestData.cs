@@ -1,4 +1,5 @@
-﻿using LifeQuest.Domain.Entities;
+﻿using LifeQuest.Domain.Components;
+using LifeQuest.Domain.Entities;
 using LifeQuest.Domain.Enums;
 
 namespace LifeQuest.Application.Tests;

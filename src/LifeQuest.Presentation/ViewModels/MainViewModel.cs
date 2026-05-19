@@ -20,12 +20,12 @@ public class MainViewModel : ViewModelBase
         _aiService = aiService;
         _userRepository = userRepository;
         _questRepository = questRepository;
-        _currentPage = new LoginViewModel(this);
+        _currentPage = new LoginViewModel(this, _userRepository);
     }
 
     public void NavigateToGame(int id, string username)
     {
-        CurrentPage = new GameViewModel(id, username, _aiService, _userRepository, this);
+        CurrentPage = new GameViewModel(id, username, _aiService, _userRepository, _questRepository, this);
     }
 
     public void NavigateToCreateQuest(GameViewModel gameVm)
@@ -46,6 +46,11 @@ public class MainViewModel : ViewModelBase
             gameVm.UserId,
             gameVm.PlayerName,
             "",
+            _userRepository,
+            (newUsername) => {
+                gameVm.RefreshAfterSettings(); // ← оновлюємо GameView
+                NavigateBackToGame(gameVm);
+            },
             () => NavigateBackToGame(gameVm)
         );
     }

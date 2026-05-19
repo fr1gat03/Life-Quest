@@ -2,7 +2,7 @@
 
 public class UserStats
 {   
-    public Level Level { get; }
+    public Level Level { get; private set; } = new Level();
     public int HealthPoints { get; private set; }
     public int Gold { get; private set; }
 

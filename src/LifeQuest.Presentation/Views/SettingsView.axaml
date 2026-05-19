@@ -126,7 +126,7 @@
                                          BorderBrush="#3D2E0A" BorderThickness="1"
                                          CornerRadius="8" Padding="12,10"
                                          FontSize="14"
-                                         Watermark="Вставте ваш API ключ..."/>
+                                         PlaceholderText="Вставте ваш API ключ..."/>
                                 <TextBlock Text="⚠️ Ключ зберігається локально в appsettings.json"
                                            Foreground="#5A4A3A" FontSize="11"/>
                             </StackPanel>

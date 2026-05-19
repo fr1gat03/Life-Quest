@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LifeQuest.Domain.Components;
+﻿using LifeQuest.Domain.Components;
 
 namespace LifeQuest.Domain.Entities;
 
@@ -10,7 +8,7 @@ public class QuestCollection
 
     public bool RemoveQuest(string id)
     {
-        if (IsIdInKey(id))
+        if (!IsIdInKey(id))
         {
             return false;
         }
@@ -24,7 +22,7 @@ public class QuestCollection
         {
             throw new ArgumentException("Invalid quest");
         }
-        if (!IsIdInKey(id))
+        if (IsIdInKey(id))
         {
             return false;
         }
@@ -34,14 +32,14 @@ public class QuestCollection
 
     public bool ToComplete(string id)
     {
-        if (IsIdInKey(id))
+        if (!IsIdInKey(id))
         {
             return false;
         }
         Quest quest = Quests[id];
         if (quest.IsCompleted)
         {
-            throw new InvalidOperationException("Quest in completion");
+            throw new InvalidOperationException("Quest already completed");
         }
         quest.ToComplete();
         return true;
@@ -53,7 +51,7 @@ public class QuestCollection
         {
             throw new ArgumentException("Invalid id");
         }
-        return !Quests.ContainsKey(id);
+        return Quests.ContainsKey(id);
     }
 
     private bool IsValidId(string id)
@@ -63,11 +61,6 @@ public class QuestCollection
 
     private bool IsValidQuest(Quest quest)
     {
-        bool currentQuest = true;
-        if (quest.Title == null || quest.Title == "")
-        {
-            currentQuest = false;
-        }
-        return currentQuest;
+        return quest.Title != null && quest.Title != "";
     }
 }

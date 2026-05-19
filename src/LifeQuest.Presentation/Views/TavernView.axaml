@@ -34,7 +34,7 @@
         </Border>
 
         <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,20,0,0">
-            <TextBox Grid.Column="0" Text="{Binding UserInput}" Watermark="Запитай щось у Елдора..."
+            <TextBox Grid.Column="0" Text="{Binding UserInput}" PlaceholderText="Запитай щось у Елдора..."
                      Background="#313244" Foreground="#CDD6F4" BorderThickness="0" CornerRadius="8" 
                      Padding="15" Margin="0,0,15,0" FontSize="16"/>
             

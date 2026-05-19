@@ -66,17 +66,18 @@ public class CreateQuestViewModel : ViewModelBase
         IsLoading = true;
         ErrorMessage = "⚖️ Гейм-майстер перевіряє баланс...";
 
-        var currentProposal = new AiQuestProposal 
-        { 
-            Title = Title, Difficulty = Difficulty, 
-            RewardXp = RewardXp, RewardGold = RewardGold 
+        var currentProposal = new AiQuestProposal
+        {
+            Title = Title, Difficulty = Difficulty,
+            RewardXp = RewardXp, RewardGold = RewardGold
         };
 
         var verdict = await _aiService.ValidateQuestFairness(currentProposal);
 
         if (verdict.IsFair)
         {
-            _onQuestCreated(currentProposal); // Зберігаємо і закриваємо
+            IsLoading = false; // ← додали
+            _onQuestCreated(currentProposal);
         }
         else
         {
