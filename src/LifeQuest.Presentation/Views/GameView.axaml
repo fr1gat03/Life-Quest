@@ -3,6 +3,7 @@
              xmlns:vm="using:LifeQuest.Presentation.ViewModels"
              x:Class="LifeQuest.Presentation.Views.GameView"
              x:DataType="vm:GameViewModel"
+             x:CompileBindings="False"
              Background="#0F0F1A" FontFamily="Segoe UI">
 
     <Grid RowDefinitions="Auto, Auto, *">

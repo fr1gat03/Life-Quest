@@ -1,0 +1,192 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LifeQuest.Presentation.ViewModels"
+             x:Class="LifeQuest.Presentation.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel"
+             x:CompileBindings="False"
+             Background="#0D0A0E">
+
+    <ScrollViewer>
+        <StackPanel HorizontalAlignment="Center" Width="520"
+                    Margin="0,40,0,40" Spacing="0">
+
+            <!-- Кнопка назад -->
+            <Button Content="⬅ До карти" Command="{Binding BackCommand}"
+                    Background="#1A1218" Foreground="#8B7355"
+                    CornerRadius="8" Padding="14,8"
+                    HorizontalAlignment="Left" Margin="0,0,0,24"/>
+
+            <!-- Головна картка -->
+            <Border Background="#1A1218" CornerRadius="16"
+                    BoxShadow="0 8 40 0 #000000">
+
+                <!-- Золота рамка -->
+                <Border BorderBrush="#3D2E0A" BorderThickness="1" CornerRadius="16">
+                    <StackPanel Spacing="0">
+
+                        <!-- Заголовок -->
+                        <StackPanel Margin="32,28,32,0" Spacing="8">
+                            <TextBlock Text="📜 Книга Героя"
+                                       FontSize="26" FontWeight="Bold"
+                                       Foreground="#C9A84C"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="────────── ✦ ──────────"
+                                       Foreground="#3D2E0A" FontSize="14"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- СЕКЦІЯ: Профіль -->
+                        <StackPanel Margin="32,24,32,0" Spacing="16">
+                            <TextBlock Text="👤 Профіль"
+                                       FontSize="13" FontWeight="Bold"
+                                       Foreground="#8B7355"
+                                       LetterSpacing="2"/>
+
+                            <!-- Hero ID -->
+                            <Border Background="#0D0A0E" CornerRadius="10"
+                                    Padding="16,12">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="🆔 Hero ID:"
+                                               Foreground="#8B7355" FontSize="14"
+                                               VerticalAlignment="Center"/>
+                                    <Border Background="#2A1F2E" CornerRadius="6"
+                                            Padding="10,4">
+                                        <TextBlock Text="{Binding HeroId, StringFormat='#{0}'}"
+                                                   Foreground="#C9A84C" FontSize="14"
+                                                   FontWeight="Bold"/>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Нікнейм -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="✏️ Ім'я героя"
+                                           Foreground="#E8D5B7" FontSize="14"/>
+                                <TextBox Text="{Binding Username}"
+                                         Background="#0D0A0E" Foreground="#E8D5B7"
+                                         BorderBrush="#3D2E0A" BorderThickness="1"
+                                         CornerRadius="8" Padding="12,10"
+                                         FontSize="14"/>
+                            </StackPanel>
+
+                            <!-- Вибір аватару -->
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="🎭 Аватар героя"
+                                           Foreground="#E8D5B7" FontSize="14"/>
+                                <ItemsControl ItemsSource="{Binding Avatars}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Content="{Binding}"
+                                                    Tag="{Binding}"
+                                                    FontSize="24"
+                                                    Background="#0D0A0E"
+                                                    CornerRadius="10"
+                                                    Margin="4" Padding="10"
+                                                    Click="AvatarButton_Click"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <!-- Поточний аватар -->
+                                <StackPanel Orientation="Horizontal" Spacing="10"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Text="Обрано:"
+                                               Foreground="#8B7355" FontSize="13"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding SelectedAvatar}"
+                                               FontSize="28" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Розділювач -->
+                        <TextBlock Text="────────── ✦ ──────────"
+                                   Foreground="#3D2E0A" FontSize="14"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,24,0,0"/>
+
+                        <!-- СЕКЦІЯ: Система -->
+                        <StackPanel Margin="32,20,32,0" Spacing="16">
+                            <TextBlock Text="⚙️ Система"
+                                       FontSize="13" FontWeight="Bold"
+                                       Foreground="#8B7355"
+                                       LetterSpacing="2"/>
+
+                            <!-- API Ключ -->
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="🔑 Gemini API ключ"
+                                           Foreground="#E8D5B7" FontSize="14"/>
+                                <TextBox Text="{Binding ApiKey}"
+                                         PasswordChar="•"
+                                         Background="#0D0A0E" Foreground="#E8D5B7"
+                                         BorderBrush="#3D2E0A" BorderThickness="1"
+                                         CornerRadius="8" Padding="12,10"
+                                         FontSize="14"
+                                         Watermark="Вставте ваш API ключ..."/>
+                                <TextBlock Text="⚠️ Ключ зберігається локально в appsettings.json"
+                                           Foreground="#5A4A3A" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Кнопки дій -->
+                        <StackPanel Margin="32,24,32,0" Spacing="10">
+
+                            <!-- Зберегти -->
+                            <Button Command="{Binding SaveCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    CornerRadius="10" Padding="14,12"
+                                    Cursor="Hand">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                        <GradientStop Color="#3D2A00" Offset="0"/>
+                                        <GradientStop Color="#5C3D00" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="💾" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Зберегти зміни"
+                                               Foreground="#C9A84C" FontSize="15"
+                                               FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Скинути прогрес -->
+                            <Button Command="{Binding ResetProgressCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Background="#1A0A0A"
+                                    CornerRadius="10" Padding="14,12">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="🗑️" FontSize="16" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Скинути прогрес"
+                                               Foreground="#8B2020" FontSize="15"
+                                               FontWeight="Bold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
+                        </StackPanel>
+
+                        <!-- Статус повідомлення -->
+                        <TextBlock Text="{Binding StatusMessage}"
+                                   Foreground="#A6E3A1" FontSize="13"
+                                   HorizontalAlignment="Center"
+                                   Margin="32,12,32,0"/>
+
+                        <!-- Версія -->
+                        <TextBlock Text="Life Quest v0.0.1 — Froggy TEAM"
+                                   Foreground="#3D2E0A" FontSize="11"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,20,0,28"/>
+
+                    </StackPanel>
+                </Border>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

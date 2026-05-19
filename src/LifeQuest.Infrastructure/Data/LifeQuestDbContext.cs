@@ -18,6 +18,8 @@ public class LifeQuestDbContext : DbContext
         {
             entity.HasKey(u => u.Id);
 
+            entity.Ignore(u => u.Quests);
+
             entity.OwnsOne(u => u.UserStats, stats =>
             {
                 stats.OwnsOne(s => s.Level);
