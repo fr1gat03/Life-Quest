@@ -24,19 +24,26 @@ public class QuestRepository : IQuestRepository
 
     public Quest? GetQuestById(string id)
     {
-        return _context.Quests.FirstOrDefault(q => q.Id == id);
+        return _context.Quests.Find(id);
     }
 
     public void UpdateQuest(Quest quest)
     {
-        if (!_context.Quests.Any(q => q.Id == quest.Id))
+        var existing = _context.Quests.Find(quest.Id);
+
+        if (existing == null)
         {
             _context.Quests.Add(quest);
         }
         else
         {
-            _context.Quests.Update(quest);
+            _context.Entry(existing).CurrentValues.SetValues(quest);
         }
         _context.SaveChanges();
+    }
+    
+    public bool HasAnyQuests(int userId)
+    {
+        return _context.Quests.Any(q => q.UserId == userId);
     }
 }

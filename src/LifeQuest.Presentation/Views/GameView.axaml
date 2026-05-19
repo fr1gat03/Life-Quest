@@ -222,6 +222,22 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                
+                <Border CornerRadius="12" Padding="20,14"
+                        Margin="0,10,0,0"
+                        IsVisible="{Binding HasMotivation}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                            <GradientStop Color="#2A1F3D" Offset="0"/>
+                            <GradientStop Color="#1F2A3D" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <TextBlock Text="{Binding MotivationMessage}"
+                               Foreground="#CBA6F7"
+                               FontSize="14" FontStyle="Italic"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"/>
+                </Border>
 
                 <!-- Версія внизу -->
                 <TextBlock Text="Life Quest v0.0.1 — Froggy TEAM"

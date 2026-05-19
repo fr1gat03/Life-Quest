@@ -25,4 +25,9 @@ public class FakeQuestRepository : IQuestRepository
         if (existing != null) _quests.Remove(existing);
         _quests.Add(quest);
     }
+    
+    public bool HasAnyQuests(int userId)
+    {
+        return _quests.Any(q => q.UserId == userId);
+    }
 }

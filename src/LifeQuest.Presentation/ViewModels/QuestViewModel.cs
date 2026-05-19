@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Media;
 
@@ -41,7 +42,7 @@ public class QuestViewModel : ViewModelBase
     public ICommand CompleteCommand { get; }
 
     public QuestViewModel(string questId, string title, int rewardXp, int rewardGold,
-        string difficulty, Action<QuestViewModel> onComplete)
+        string difficulty, Func<QuestViewModel, Task> onComplete)
     {
         QuestId = questId;
         Title = title;
@@ -49,13 +50,13 @@ public class QuestViewModel : ViewModelBase
         RewardGold = rewardGold;
         Difficulty = difficulty;
 
-        CompleteCommand = new RelayCommand(() =>
+        CompleteCommand = new RelayCommand(async () =>
         {
             if (!IsCompleted)
             {
                 IsCompleted = true;
                 OnPropertyChanged(nameof(IsNotCompleted));
-                onComplete(this);
+                await onComplete(this);
             }
         });
     }
