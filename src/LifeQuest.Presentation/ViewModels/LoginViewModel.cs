@@ -40,26 +40,6 @@ public class LoginViewModel : ViewModelBase
         _mainNavigator = mainNavigator;
         _userRepository = userRepository;
 
-        LoginCommand = new RelayCommand(() =>
-        {
-            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
-            {
-                ErrorMessage = "⚠️ Заповніть логін та пароль";
-                return;
-            }
-
-            var existingUser = _userRepository.GetUserByLogin(Username);
-            if (existingUser != null)
-            {
-                ErrorMessage = "";
-                _mainNavigator.NavigateToGame(existingUser.Id, existingUser.Login);
-            }
-            else
-            {
-                ErrorMessage = "❌ Користувача не знайдено. Спочатку зареєструйтесь.";
-            }
-        });
-
         RegisterCommand = new RelayCommand(() =>
         {
             if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
@@ -77,16 +57,40 @@ public class LoginViewModel : ViewModelBase
 
             var random = new Random();
             int newId;
-            do
-            {
-                newId = random.Next(10000, 99999);
-            } while (_userRepository.GetUserById(newId) != null);
+            do { newId = random.Next(10000, 99999); }
+            while (_userRepository.GetUserById(newId) != null);
 
-            var newUser = new User(newId, Username, Password);
+            var newUser = new User(newId, Username, "");
+            newUser.SetPassword(Password); // ← хешуємо
             _userRepository.SaveUser(newUser);
 
             ErrorMessage = "";
             _mainNavigator.NavigateToGame(newId, Username);
+        });
+
+        LoginCommand = new RelayCommand(() =>
+        {
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = "⚠️ Заповніть логін та пароль";
+                return;
+            }
+
+            var existingUser = _userRepository.GetUserByLogin(Username);
+            if (existingUser == null)
+            {
+                ErrorMessage = "❌ Користувача не знайдено";
+                return;
+            }
+
+            if (!existingUser.VerifyPassword(Password))
+            {
+                ErrorMessage = "❌ Невірний пароль";
+                return;
+            }
+
+            ErrorMessage = "";
+            _mainNavigator.NavigateToGame(existingUser.Id, existingUser.Login);
         });
     }
 }

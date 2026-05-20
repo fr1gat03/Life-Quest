@@ -4,46 +4,145 @@
              x:Class="LifeQuest.Presentation.Views.LoginView"
              x:DataType="vm:LoginViewModel"
              x:CompileBindings="False"
-             Background="#1E1E2E">
+             Background="#0D0A0E">
 
-    <Border Padding="40" VerticalAlignment="Center" HorizontalAlignment="Center"
-            Background="#181825" CornerRadius="15" BoxShadow="0 10 30 0 #000000">
+    <Grid>
+        <!-- Фонові декоративні елементи -->
+        <TextBlock Text="⚜" FontSize="80" Foreground="#1F1510"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Margin="20,20,0,0"/>
+        <TextBlock Text="⚜" FontSize="80" Foreground="#1F1510"
+                   HorizontalAlignment="Right" VerticalAlignment="Top"
+                   Margin="0,20,20,0"/>
+        <TextBlock Text="⚜" FontSize="80" Foreground="#1F1510"
+                   HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                   Margin="20,0,0,20"/>
+        <TextBlock Text="⚜" FontSize="80" Foreground="#1F1510"
+                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Margin="0,0,20,20"/>
 
-        <StackPanel Spacing="15" Width="300">
-            <TextBlock Text="⚔️" FontSize="50" HorizontalAlignment="Center"/>
-            <TextBlock Text="Life Quest" FontSize="26" FontWeight="Bold"
-                       HorizontalAlignment="Center" Foreground="#CDD6F4"/>
-            <TextBlock Text="Увійдіть або створіть акаунт" FontSize="13"
-                       HorizontalAlignment="Center" Foreground="#A6ADC8"
-                       Margin="0,0,0,10"/>
+        <!-- Центральна картка -->
+        <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+                Width="400" Background="#1A1218" CornerRadius="16"
+                BoxShadow="0 20 60 0 #000000">
 
-            <TextBlock Text="Логін" Foreground="#CDD6F4" FontSize="14"/>
-            <TextBox Text="{Binding Username}"
-                     PlaceholderText="Введіть ваш логін..."
-                     Background="#313244" Foreground="#CDD6F4"
-                     BorderThickness="0" CornerRadius="8"/>
+            <!-- Золота рамка -->
+            <Border BorderBrush="#3D2E0A" BorderThickness="1" CornerRadius="16">
+                <StackPanel Margin="40,36,40,36" Spacing="0">
 
-            <TextBlock Text="Пароль" Foreground="#CDD6F4" FontSize="14" Margin="0,10,0,0"/>
-            <TextBox Text="{Binding Password}" PasswordChar="*"
-                     PlaceholderText="••••••••"
-                     Background="#313244" Foreground="#CDD6F4"
-                     BorderThickness="0" CornerRadius="8"/>
+                    <!-- Лого і заголовок -->
+                    <TextBlock Text="⚔️" FontSize="52"
+                               HorizontalAlignment="Center"/>
 
-            <TextBlock Text="{Binding ErrorMessage}"
-                       Foreground="#F38BA8" FontSize="12"
-                       TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Life Quest"
+                               FontSize="30" FontWeight="Bold"
+                               Foreground="#C9A84C"
+                               HorizontalAlignment="Center"
+                               Margin="0,8,0,4"/>
 
-            <Button Content="⚔️ Увійти" Command="{Binding LoginCommand}"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                    Background="#89B4FA" Foreground="#11111B"
-                    FontWeight="Bold" Padding="12" CornerRadius="8"
-                    Margin="0,10,0,0"/>
+                    <TextBlock Text="────── ✦ ──────"
+                               Foreground="#3D2E0A" FontSize="14"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,6"/>
 
-            <Button Content="📜 Зареєструватись" Command="{Binding RegisterCommand}"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                    Background="#313244" Foreground="#CDD6F4"
-                    FontWeight="Bold" Padding="12" CornerRadius="8"/>
-        </StackPanel>
+                    <TextBlock Text="Увійдіть або створіть акаунт"
+                               FontSize="13" Foreground="#8B7355"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,28"/>
 
-    </Border>
+                    <!-- Логін -->
+                    <TextBlock Text="⚜️ Ім'я героя"
+                               Foreground="#E8D5B7" FontSize="13"
+                               Margin="0,0,0,8"/>
+                    <Border Background="#0D0A0E" CornerRadius="8"
+                            BorderBrush="#3D2E0A" BorderThickness="1"
+                            Margin="0,0,0,16">
+                        <TextBox Text="{Binding Username}"
+                                 PlaceholderText="Введіть ваш логін..."
+                                 Background="Transparent"
+                                 Foreground="#E8D5B7"
+                                 BorderThickness="0"
+                                 Padding="14,10"
+                                 FontSize="14"/>
+                    </Border>
+
+                    <!-- Пароль -->
+                    <TextBlock Text="🔒 Пароль"
+                               Foreground="#E8D5B7" FontSize="13"
+                               Margin="0,0,0,8"/>
+                    <Border Background="#0D0A0E" CornerRadius="8"
+                            BorderBrush="#3D2E0A" BorderThickness="1"
+                            Margin="0,0,0,8">
+                        <TextBox Text="{Binding Password}"
+                                 PasswordChar="•"
+                                 PlaceholderText="••••••••"
+                                 Background="Transparent"
+                                 Foreground="#E8D5B7"
+                                 BorderThickness="0"
+                                 Padding="14,10"
+                                 FontSize="14"/>
+                    </Border>
+
+                    <!-- Повідомлення про помилку -->
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="#8B2020"
+                               FontSize="12" TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               Margin="0,4,0,20"
+                               MinHeight="18"/>
+
+                    <!-- Кнопка Увійти -->
+                    <Button Command="{Binding LoginCommand}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            CornerRadius="10" Padding="14,12"
+                            Margin="0,0,0,10">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                <GradientStop Color="#3D2A00" Offset="0"/>
+                                <GradientStop Color="#5C3D00" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="⚔️" FontSize="16"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Увійти до королевства"
+                                       Foreground="#C9A84C"
+                                       FontSize="15" FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Роздільник -->
+                    <TextBlock Text="────── або ──────"
+                               Foreground="#3D2E0A" FontSize="12"
+                               HorizontalAlignment="Center"
+                               Margin="0,4,0,10"/>
+
+                    <!-- Кнопка Зареєструватись -->
+                    <Button Command="{Binding RegisterCommand}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Background="#0D0A0E"
+                            BorderBrush="#3D2E0A" BorderThickness="1"
+                            CornerRadius="10" Padding="14,12">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="📜" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="Створити нового героя"
+                                       Foreground="#8B7355"
+                                       FontSize="15" FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Версія -->
+                    <TextBlock Text="Life Quest v0.0.1 — Froggy TEAM"
+                               Foreground="#3D2E0A" FontSize="10"
+                               HorizontalAlignment="Center"
+                               Margin="0,24,0,0"/>
+
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
 </UserControl>
