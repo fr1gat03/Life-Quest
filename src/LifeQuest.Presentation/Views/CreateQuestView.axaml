@@ -4,57 +4,198 @@
              x:Class="LifeQuest.Presentation.Views.CreateQuestView"
              x:DataType="vm:CreateQuestViewModel"
              x:CompileBindings="False"
-             Background="#1E1E2E">
-             
-    <Border Padding="30" Background="#181825" CornerRadius="15" BoxShadow="0 10 30 0 #000000"
-            HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
-        <StackPanel Spacing="15">
-            <TextBlock Text="📜 Новий Квест" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#CDD6F4"/>
-            
-            <TextBlock Text="Опиши задачу своїми словами:" Foreground="#A6ADC8"/>
-            <TextBox Text="{Binding UserInput}" PlaceholderText="Наприклад: помити посуд або пробігти 5 км" 
-                     Height="60" TextWrapping="Wrap" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
-            
-            <Button Content="✨ Згенерувати баланс через ШІ" Command="{Binding GenerateCommand}"
-                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                    Background="#CBA6F7" Foreground="#11111B" FontWeight="Bold" CornerRadius="8"/>
+             Background="#0D0A0E">
 
-            <Border Height="1" Background="#45475A" Margin="0,10"/>
+    <ScrollViewer>
+        <StackPanel HorizontalAlignment="Center" Width="500"
+                    Margin="0,40,0,40" Spacing="0">
 
-            <TextBlock Text="Назва квесту:" Foreground="#A6ADC8"/>
-            <TextBox Text="{Binding Title}" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
+            <!-- Головна картка -->
+            <Border Background="#1A1218" CornerRadius="16"
+                    BorderBrush="#3D2E0A" BorderThickness="1"
+                    BoxShadow="0 8 40 0 #000000">
+                <StackPanel Spacing="0">
 
-            <TextBlock Text="Складність:" Foreground="#A6ADC8" Margin="0,10,0,0"/>
-            <ComboBox SelectedItem="{Binding Difficulty}" Background="#313244" Foreground="#CDD6F4" HorizontalAlignment="Stretch">
-                <ComboBoxItem>Easy</ComboBoxItem>
-                <ComboBoxItem>Medium</ComboBoxItem>
-                <ComboBoxItem>Hard</ComboBoxItem>
-                <ComboBoxItem>Epic</ComboBoxItem>
-            </ComboBox>
-            
-            <Grid ColumnDefinitions="*, *">
-                <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                    <TextBlock Text="Досвід (XP):" Foreground="#A6E3A1"/>
-                    <TextBox Text="{Binding RewardXp}" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
+                    <!-- Заголовок -->
+                    <StackPanel Margin="32,28,32,0" Spacing="6">
+                        <StackPanel Orientation="Horizontal" Spacing="10"
+                                    HorizontalAlignment="Center">
+                            <TextBlock Text="📜" FontSize="26"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Новий Звит"
+                                       FontSize="24" FontWeight="Bold"
+                                       Foreground="#C9A84C"/>
+                        </StackPanel>
+                        <TextBlock Text="────── ✦ ──────"
+                                   Foreground="#3D2E0A" FontSize="13"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Тіло форми -->
+                    <StackPanel Margin="32,20,32,0" Spacing="16">
+
+                        <!-- Опис задачі -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="✍️ Опиши задачу своїми словами"
+                                       Foreground="#E8D5B7" FontSize="13"/>
+                            <Border Background="#0D0A0E" CornerRadius="8"
+                                    BorderBrush="#3D2E0A" BorderThickness="1">
+                                <TextBox Text="{Binding UserInput}"
+                                         PlaceholderText="Наприклад: помити посуд або пробігти 5 км"
+                                         Height="70" TextWrapping="Wrap"
+                                         Background="Transparent"
+                                         Foreground="#E8D5B7"
+                                         BorderThickness="0"
+                                         Padding="14,10" FontSize="13"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Кнопка AI -->
+                        <Button Command="{Binding GenerateCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                CornerRadius="10" Padding="14,11"
+                                BorderBrush="#6B2FC9" BorderThickness="1"
+                                Background="#1A0A2E">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="🔮" FontSize="15"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="Запитати мага балансу"
+                                           Foreground="#9B6FD4"
+                                           FontSize="14" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+
+                    <!-- Розділювач -->
+                    <TextBlock Text="────── ✦ ──────"
+                               Foreground="#3D2E0A" FontSize="13"
+                               HorizontalAlignment="Center"
+                               Margin="0,20,0,0"/>
+
+                    <!-- Деталі квесту -->
+                    <StackPanel Margin="32,16,32,0" Spacing="14">
+
+                        <!-- Назва -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="⚔️ Назва звиту"
+                                       Foreground="#E8D5B7" FontSize="13"/>
+                            <Border Background="#0D0A0E" CornerRadius="8"
+                                    BorderBrush="#3D2E0A" BorderThickness="1">
+                                <TextBox Text="{Binding Title}"
+                                         Background="Transparent"
+                                         Foreground="#E8D5B7"
+                                         BorderThickness="0"
+                                         Padding="14,10" FontSize="13"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Складність -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="⚖️ Складність"
+                                       Foreground="#E8D5B7" FontSize="13"/>
+                            <Border Background="#0D0A0E" CornerRadius="8"
+                                    BorderBrush="#3D2E0A" BorderThickness="1">
+                                <ComboBox SelectedItem="{Binding Difficulty}"
+                                          ItemsSource="{Binding DifficultyOptions}"
+                                          Background="Transparent"
+                                          Foreground="#E8D5B7"
+                                          BorderThickness="0"
+                                          HorizontalAlignment="Stretch"
+                                          Padding="10,8"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- XP і Gold -->
+                        <Grid ColumnDefinitions="*, *" >
+                            <StackPanel Grid.Column="0" Spacing="8" Margin="0,0,8,0">
+                                <TextBlock Text="✨ Досвід (XP)"
+                                           Foreground="#C9A84C" FontSize="13"/>
+                                <Border Background="#0D0A0E" CornerRadius="8"
+                                        BorderBrush="#3D2E0A" BorderThickness="1">
+                                    <TextBox Text="{Binding RewardXp}"
+                                             Background="Transparent"
+                                             Foreground="#C9A84C"
+                                             BorderThickness="0"
+                                             Padding="14,10" FontSize="13"/>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="8" Margin="8,0,0,0">
+                                <TextBlock Text="💰 Золото"
+                                           Foreground="#8B7355" FontSize="13"/>
+                                <Border Background="#0D0A0E" CornerRadius="8"
+                                        BorderBrush="#3D2E0A" BorderThickness="1">
+                                    <TextBox Text="{Binding RewardGold}"
+                                             Background="Transparent"
+                                             Foreground="#8B7355"
+                                             BorderThickness="0"
+                                             Padding="14,10" FontSize="13"/>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Повідомлення -->
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="#8B2020" FontSize="12"
+                                   TextWrapping="Wrap"
+                                   HorizontalAlignment="Center"
+                                   MinHeight="16"/>
+
+                    </StackPanel>
+
+                    <!-- Кнопки дій -->
+                    <Grid ColumnDefinitions="*, *" Margin="32,16,32,28">
+
+                        <!-- Скасувати -->
+                        <Button Grid.Column="0" Command="{Binding CancelCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Margin="0,0,8,0"
+                                Background="#0D0A0E"
+                                BorderBrush="#3D2E0A" BorderThickness="1"
+                                CornerRadius="10" Padding="14,11">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="↩" FontSize="15"
+                                           Foreground="#8B7355"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="Відступити"
+                                           Foreground="#8B7355"
+                                           FontSize="14" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Зберегти -->
+                        <Button Grid.Column="1" Command="{Binding SaveCommand}"
+                                IsEnabled="{Binding !IsLoading}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Margin="8,0,0,0"
+                                BorderBrush="#3D2E0A" BorderThickness="1"
+                                CornerRadius="10" Padding="14,11">
+                            <Button.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                    <GradientStop Color="#3D2A00" Offset="0"/>
+                                    <GradientStop Color="#5C3D00" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="⚔️" FontSize="15"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="Прийняти звит"
+                                           Foreground="#C9A84C"
+                                           FontSize="14" FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                    </Grid>
+
                 </StackPanel>
-                <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                    <TextBlock Text="Золото:" Foreground="#F9E2AF"/>
-                    <TextBox Text="{Binding RewardGold}" Background="#313244" Foreground="#CDD6F4" BorderThickness="0"/>
-                </StackPanel>
-            </Grid>
+            </Border>
 
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="#F38BA8" TextWrapping="Wrap" FontWeight="SemiBold"/>
-
-            <Grid ColumnDefinitions="*, *" Margin="0,10,0,0">
-                <Button Grid.Column="0" Content="Скасувати" Command="{Binding CancelCommand}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,5,0"
-                        Background="#45475A" Foreground="#CDD6F4" CornerRadius="8"/>
-                        
-                <Button Grid.Column="1" Content="Зберегти квест" Command="{Binding SaveCommand}"
-                        IsEnabled="{Binding !IsLoading}"
-                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="5,0,0,0"
-                        Background="#A6E3A1" Foreground="#11111B" FontWeight="Bold" CornerRadius="8"/>
-            </Grid>
         </StackPanel>
-    </Border>
+    </ScrollViewer>
 </UserControl>

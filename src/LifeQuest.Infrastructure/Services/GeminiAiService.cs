@@ -11,6 +11,13 @@ public class GeminiAiService : IAiService
 {
     private readonly string _apiKey;
     private readonly Client _client;
+    
+    private const string BalanceTable = @"
+    Таблиця балансу (СУВОРО дотримуйся):
+    - Easy (легке, до 30 хв): XP 10-40, Gold 5-20
+    - Medium (середнє, 30хв-2год): XP 41-80, Gold 21-40
+    - Hard (важке, 2-8 год): XP 81-150, Gold 41-70
+    - Epic (епічне, кілька днів): XP 151-200, Gold 71-100";
 
     private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
     {
@@ -27,16 +34,17 @@ public class GeminiAiService : IAiService
 
     public async Task<AiQuestProposal> AnalyzeAndBalanceQuest(string userInput)
     {
-        var prompt = $@"
-        Ти гейм-дизайнер. Користувач хоче виконати задачу: '{userInput}'.
-        Оціни складність (Easy, Medium, Hard) і призначи XP (від 10 до 200) та Gold (від 5 до 100).
-        Формат (ТІЛЬКИ JSON, без жодного тексту):
-        {{
-            ""Title"": ""Назва"",
-            ""Difficulty"": ""Medium"",
-            ""RewardXp"": 50,
-            ""RewardGold"": 15
-        }}";
+        var prompt = $@"Ти гейм-дизайнер RPG гри Life Quest.
+    Визнач параметри квесту для реальної задачі: '{userInput}'. 
+    {BalanceTable}
+
+    Відповідай ТІЛЬКИ JSON, без жодного тексту навколо:
+    {{
+        ""Title"": ""Коротка назва квесту"",
+        ""Difficulty"": ""Easy/Medium/Hard/Epic"",
+        ""RewardXp"": число,
+        ""RewardGold"": число
+    }}";
 
         try
         {
@@ -55,17 +63,26 @@ public class GeminiAiService : IAiService
         }
     }
 
-    public async Task<FairnessVerdict> ValidateQuestFairness(AiQuestProposal userEditedQuest)
+    public async Task<FairnessVerdict> ValidateQuestFairness(AiQuestProposal quest)
     {
-        var prompt = $@"
-        Ти суворий Гейм-Майстер. Перевір квест: '{userEditedQuest.Title}'.
-        Нагорода: {userEditedQuest.RewardXp} XP, {userEditedQuest.RewardGold} Gold.
-        Якщо нагорода занадто велика - IsFair: false. Якщо адекватна - true.
-        Формат (ТІЛЬКИ JSON, без жодного тексту):
-        {{
-            ""IsFair"": true,
-            ""Feedback"": ""Твій коментар""
-        }}";
+        var prompt = $@"Ти Гейм-Майстер RPG гри Life Quest.
+    Перевір чи не читерить гравець зі своїм квестом.
+    {BalanceTable}
+
+    Квест: '{quest.Title}'
+    Складність: {quest.Difficulty}
+    Нагорода: {quest.RewardXp} XP, {quest.RewardGold} Gold
+
+    Правила перевірки:
+    - Якщо значення в межах або близько до таблиці (±20%) — IsFair: true
+    - Відхиляй тільки якщо СУТТЄВО перевищує межі (більш ніж на 50%)
+    - Не будь занадто суворим — гравець міг обрати вищу складність
+
+    Відповідай ТІЛЬКИ JSON:
+    {{
+        ""IsFair"": true/false,
+        ""Feedback"": ""Коротке пояснення якщо відхилено""
+    }}";
 
         try
         {
@@ -75,19 +92,19 @@ public class GeminiAiService : IAiService
             );
             var jsonText = CleanJson(response.Text);
             return JsonSerializer.Deserialize<FairnessVerdict>(jsonText, _jsonOptions)
-                   ?? new FairnessVerdict { IsFair = false, Feedback = "Помилка парсингу" };
+                   ?? new FairnessVerdict { IsFair = true };
         }
         catch
         {
-            return new FairnessVerdict { IsFair = false, Feedback = "Магічна аномалія з'єднання." };
+            return new FairnessVerdict { IsFair = true };
         }
     }
 
     public async Task<string> GetNpcResponse(string userMessage, List<ChatMessage> history)
     {
         var prompt = $@"Ти мудрий NPC Елдор у таверні фентезійної RPG гри. 
-Відповідай ТІЛЬКИ простим текстом БЕЗ markdown розмітки (без **, ##, *, - та інших символів).
-Повідомлення гравця: {userMessage}";
+    Відповідай ТІЛЬКИ простим текстом БЕЗ markdown розмітки (без **, ##, *, - та інших символів).
+    Повідомлення гравця: {userMessage}";
 
         try
         {
