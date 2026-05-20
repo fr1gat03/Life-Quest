@@ -61,7 +61,7 @@ public class LoginViewModel : ViewModelBase
             while (_userRepository.GetUserById(newId) != null);
 
             var newUser = new User(newId, Username, "");
-            newUser.SetPassword(Password); // ← хешуємо
+            newUser.SetPassword(Password);
             _userRepository.SaveUser(newUser);
 
             ErrorMessage = "";
