@@ -4,48 +4,43 @@
              x:Class="LifeQuest.Presentation.Views.GameView"
              x:DataType="vm:GameViewModel"
              x:CompileBindings="False"
-             Background="#0F0F1A" FontFamily="Segoe UI">
+             Background="#0D0A0E" FontFamily="Segoe UI">
 
     <Grid RowDefinitions="Auto, Auto, *">
 
         <!-- HEADER -->
-        <Border Grid.Row="0" Padding="25,18">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                    <GradientStop Color="#1a1a2e" Offset="0"/>
-                    <GradientStop Color="#16213e" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.Background>
-
+        <Border Grid.Row="0" Padding="24,18" Background="#1A1218">
             <Grid ColumnDefinitions="Auto, *, Auto">
 
                 <!-- Аватар + ім'я -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal"
-                            Spacing="15" VerticalAlignment="Center">
-                    <Border Width="64" Height="64" CornerRadius="32"
-                            BoxShadow="0 0 20 0 #4489B4FA">
+                            Spacing="14" VerticalAlignment="Center">
+                    <Border Width="60" Height="60" CornerRadius="30"
+                            BorderBrush="#C9A84C" BorderThickness="2"
+                            BoxShadow="0 0 15 0 #44C9A84C">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                                <GradientStop Color="#89B4FA" Offset="0"/>
-                                <GradientStop Color="#CBA6F7" Offset="1"/>
+                                <GradientStop Color="#3D2A00" Offset="0"/>
+                                <GradientStop Color="#5C3D00" Offset="1"/>
                             </LinearGradientBrush>
                         </Border.Background>
-                        <TextBlock Text="{Binding AvatarText, Mode=OneWay}"
-                                   FontSize="22" FontWeight="Bold"
-                                   Foreground="#11111B"
+                        <TextBlock Text="{Binding AvatarDisplay, Mode=OneWay}"
+                                   FontSize="24" FontWeight="Bold"
+                                   Foreground="#C9A84C"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"/>
                     </Border>
 
-                    <StackPanel VerticalAlignment="Center" Spacing="4">
+                    <StackPanel VerticalAlignment="Center" Spacing="5">
                         <TextBlock Text="{Binding PlayerName, Mode=OneWay}"
-                                   FontSize="20" FontWeight="Bold"
-                                   Foreground="#CDD6F4"/>
-                        <Border Background="#313244" CornerRadius="10"
-                                Padding="8,3" HorizontalAlignment="Left">
+                                   FontSize="19" FontWeight="Bold"
+                                   Foreground="#E8D5B7"/>
+                        <Border Background="#2A1F0A" CornerRadius="8"
+                                Padding="8,3" HorizontalAlignment="Left"
+                                BorderBrush="#3D2E0A" BorderThickness="1">
                             <TextBlock Text="{Binding PlayerLevel, Mode=OneWay}"
-                                       FontSize="12" Foreground="#89B4FA"
-                                       FontWeight="SemiBold"/>
+                                       FontSize="11" Foreground="#C9A84C"
+                                       FontWeight="Bold"/>
                         </Border>
                     </StackPanel>
                 </StackPanel>
@@ -54,102 +49,108 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Center"
                             Spacing="10" Margin="30,0">
 
-                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <TextBlock Text="HP" Foreground="#CDD6F4"
-                                   FontWeight="Bold" FontSize="13"
-                                   Width="28" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="HP" Foreground="#E8D5B7"
+                                   FontWeight="Bold" FontSize="12"
+                                   Width="26" VerticalAlignment="Center"/>
                         <ProgressBar Value="{Binding CurrentHp, Mode=OneWay}"
                                      Maximum="{Binding MaxHp, Mode=OneWay}"
-                                     Width="300" Height="14"
-                                     Foreground="#FF4D57" Background="#2a1a1e"
-                                     CornerRadius="8"/>
+                                     Width="280" Height="12"
+                                     Foreground="#8B2020" Background="#1A0A0A"
+                                     CornerRadius="6"/>
                         <TextBlock Text="{Binding HpText, Mode=OneWay}"
-                                   Foreground="#6C7086" FontSize="12"
+                                   Foreground="#8B7355" FontSize="11"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                        <TextBlock Text="XP" Foreground="#CDD6F4"
-                                   FontWeight="Bold" FontSize="13"
-                                   Width="28" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="XP" Foreground="#E8D5B7"
+                                   FontWeight="Bold" FontSize="12"
+                                   Width="26" VerticalAlignment="Center"/>
                         <ProgressBar Value="{Binding CurrentXp, Mode=OneWay}"
                                      Maximum="{Binding MaxXp, Mode=OneWay}"
-                                     Width="300" Height="14"
-                                     Foreground="#A6E3A1" Background="#1a2e1a"
-                                     CornerRadius="8"/>
+                                     Width="280" Height="12"
+                                     Foreground="#C9A84C" Background="#1A1400"
+                                     CornerRadius="6"/>
                         <TextBlock Text="{Binding XpText, Mode=OneWay}"
-                                   Foreground="#6C7086" FontSize="12"
+                                   Foreground="#8B7355" FontSize="11"
                                    VerticalAlignment="Center"/>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Золото -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal"
-                            Spacing="6" VerticalAlignment="Center">
+                            Spacing="8" VerticalAlignment="Center">
                     <TextBlock Text="💰" FontSize="22" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding Gold, Mode=OneWay}"
-                               FontSize="24" FontWeight="Bold"
-                               Foreground="#FFD700" VerticalAlignment="Center"/>
+                               FontSize="26" FontWeight="Bold"
+                               Foreground="#C9A84C" VerticalAlignment="Center"/>
                 </StackPanel>
 
             </Grid>
         </Border>
 
-        <!-- РОЗДІЛЬНИК -->
-        <Border Grid.Row="1" Height="1" Background="#63169D"/>
+        <!-- Золотий роздільник -->
+        <Border Grid.Row="1" Height="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="Transparent" Offset="0"/>
+                    <GradientStop Color="#C9A84C" Offset="0.5"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
 
         <!-- КОНТЕНТ -->
-        <ScrollViewer Grid.Row="2" Margin="25,20">
+        <ScrollViewer Grid.Row="2" Margin="24,20">
             <StackPanel Spacing="0">
 
                 <!-- Заголовок + кнопки -->
                 <Grid ColumnDefinitions="*, Auto" Margin="0,0,0,20">
                     <StackPanel Grid.Column="0" Orientation="Horizontal"
-                                Spacing="12" VerticalAlignment="Center">
-                        <TextBlock Text="⚔️" FontSize="22"/>
-                        <TextBlock Text="Активні квести"
-                                   FontSize="22" FontWeight="Bold"
-                                   Foreground="#CDD6F4" VerticalAlignment="Center"/>
+                                Spacing="10" VerticalAlignment="Center">
+                        <TextBlock Text="⚔️" FontSize="20"/>
+                        <TextBlock Text="Активні Звитки"
+                                   FontSize="20" FontWeight="Bold"
+                                   Foreground="#E8D5B7" VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                         <Button Command="{Binding OpenTavernCommand}"
-                                CornerRadius="20" Padding="16,8">
-                            <Button.Background>
-                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                                    <GradientStop Color="#CBA6F7" Offset="0"/>
-                                    <GradientStop Color="#89B4FA" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Button.Background>
+                                CornerRadius="8" Padding="14,8"
+                                Background="#2A1F2E"
+                                BorderBrush="#4A2F5A" BorderThickness="1">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <TextBlock Text="🧙‍♂️" VerticalAlignment="Center"/>
                                 <TextBlock Text="Таверна" FontWeight="Bold"
-                                           Foreground="#11111B" VerticalAlignment="Center"/>
+                                           Foreground="#CBA6F7" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Command="{Binding OpenCreateQuestCommand}"
-                                CornerRadius="20" Padding="16,8">
+                                CornerRadius="8" Padding="14,8"
+                                BorderBrush="#3D2E0A" BorderThickness="1">
                             <Button.Background>
-                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                                    <GradientStop Color="#A6E3A1" Offset="0"/>
-                                    <GradientStop Color="#94E2D5" Offset="1"/>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                    <GradientStop Color="#3D2A00" Offset="0"/>
+                                    <GradientStop Color="#5C3D00" Offset="1"/>
                                 </LinearGradientBrush>
                             </Button.Background>
                             <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="✨" VerticalAlignment="Center"/>
-                                <TextBlock Text="Новий квест" FontWeight="Bold"
-                                           Foreground="#11111B" VerticalAlignment="Center"/>
+                                <TextBlock Text="📜" VerticalAlignment="Center"/>
+                                <TextBlock Text="Новий звит" FontWeight="Bold"
+                                           Foreground="#C9A84C" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Command="{Binding OpenSettingsCommand}"
-                                CornerRadius="20" Padding="16,8"
-                                Background="#313244">
+                                CornerRadius="8" Padding="14,8"
+                                Background="#1A1218"
+                                BorderBrush="#3D2E0A" BorderThickness="1">
                             <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="⚙️" VerticalAlignment="Center"/>
-                                <TextBlock Text="Налаштування" FontWeight="Bold"
-                                           Foreground="#CDD6F4" VerticalAlignment="Center"/>
+                                <TextBlock Text="📖" VerticalAlignment="Center"/>
+                                <TextBlock Text="Книга Героя" FontWeight="Bold"
+                                           Foreground="#8B7355" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -159,91 +160,83 @@
                 <ItemsControl ItemsSource="{Binding ActiveQuests}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Margin="0,0,0,10" CornerRadius="14"
-                                    BoxShadow="0 2 12 0 #00000040"
-                                    Background="#1e1e2e">
-
-                                <Grid ColumnDefinitions="*, Auto" Margin="20,14">
-
+                            <Border Margin="0,0,0,10" CornerRadius="12"
+                                    Background="#1A1218"
+                                    BorderBrush="#3D2E0A" BorderThickness="1"
+                                    BoxShadow="0 4 20 0 #00000060">
+                                <Grid ColumnDefinitions="*, Auto" Margin="18,14">
                                     <StackPanel Grid.Column="0" Spacing="8"
                                                 VerticalAlignment="Center">
-
                                         <TextBlock Text="{Binding Title}"
-                                                   FontSize="16" FontWeight="SemiBold"
-                                                   Foreground="#CDD6F4" TextWrapping="Wrap"/>
-
-                                        <!-- Ghost badges -->
-                                        <StackPanel Orientation="Horizontal" Spacing="14">
-
+                                                   FontSize="15" FontWeight="SemiBold"
+                                                   Foreground="#E8D5B7" TextWrapping="Wrap"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="12">
                                             <TextBlock Text="{Binding DifficultyLabel}"
-                                                       FontSize="13" FontWeight="Bold"
+                                                       FontSize="12" FontWeight="Bold"
                                                        Foreground="{Binding DifficultyColor}"
                                                        VerticalAlignment="Center"/>
-
-                                            <TextBlock Text="·" Foreground="#45475A"
-                                                       FontSize="16" VerticalAlignment="Center"/>
-
+                                            <TextBlock Text="·" Foreground="#3D2E0A"
+                                                       FontSize="14" VerticalAlignment="Center"/>
                                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                                <TextBlock Text="✨" FontSize="12"
+                                                <TextBlock Text="✨" FontSize="11"
                                                            VerticalAlignment="Center"/>
                                                 <TextBlock Text="{Binding RewardXp, StringFormat='{}{0} XP'}"
-                                                           Foreground="#A6E3A1" FontSize="13"
+                                                           Foreground="#C9A84C" FontSize="12"
                                                            FontWeight="SemiBold"/>
                                             </StackPanel>
-
-                                            <TextBlock Text="·" Foreground="#45475A"
-                                                       FontSize="16" VerticalAlignment="Center"/>
-
+                                            <TextBlock Text="·" Foreground="#3D2E0A"
+                                                       FontSize="14" VerticalAlignment="Center"/>
                                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                                <TextBlock Text="💰" FontSize="12"
+                                                <TextBlock Text="💰" FontSize="11"
                                                            VerticalAlignment="Center"/>
                                                 <TextBlock Text="{Binding RewardGold, StringFormat='{}{0} Gold'}"
-                                                           Foreground="#F9E2AF" FontSize="13"
+                                                           Foreground="#8B7355" FontSize="12"
                                                            FontWeight="SemiBold"/>
                                             </StackPanel>
-
                                         </StackPanel>
                                     </StackPanel>
-
-                                    <!-- Кнопка виконати — колір залежить від складності -->
+                                    <!-- Замість яскравого Background="{Binding DifficultyColor}" -->
                                     <Button Grid.Column="1"
                                             Content="Виконати ✓"
                                             Command="{Binding CompleteCommand}"
-                                            IsEnabled="{Binding !IsCompleted}"
+                                            IsEnabled="{Binding IsNotCompleted}"
                                             VerticalAlignment="Center"
-                                            Margin="20,0,0,0"
+                                            Margin="16,0,0,0"
                                             FontSize="13" FontWeight="Bold"
-                                            Foreground="#11111B"
-                                            CornerRadius="10" Padding="18,9"
-                                            Background="{Binding DifficultyColor}"/>
-
+                                            Foreground="{Binding DifficultyColor}"
+                                            CornerRadius="8" Padding="16,8"
+                                            Background="#1A1218"
+                                            BorderBrush="{Binding DifficultyColor}"
+                                            BorderThickness="1"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                
+
+                <!-- Мотиваційне повідомлення -->
                 <Border CornerRadius="12" Padding="20,14"
                         Margin="0,10,0,0"
-                        IsVisible="{Binding HasMotivation}">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
-                            <GradientStop Color="#2A1F3D" Offset="0"/>
-                            <GradientStop Color="#1F2A3D" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <TextBlock Text="{Binding MotivationMessage}"
-                               Foreground="#CBA6F7"
-                               FontSize="14" FontStyle="Italic"
-                               TextWrapping="Wrap"
-                               HorizontalAlignment="Center"/>
+                        IsVisible="{Binding HasMotivation}"
+                        Background="#1A1218"
+                        BorderBrush="#3D2E0A" BorderThickness="1">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="────── ✦ ──────"
+                                   Foreground="#3D2E0A" FontSize="12"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding MotivationMessage}"
+                                   Foreground="#C9A84C" FontSize="13"
+                                   FontStyle="Italic" TextWrapping="Wrap"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
                 </Border>
 
-                <!-- Версія внизу -->
+                <!-- Версія -->
                 <TextBlock Text="Life Quest v0.0.1 — Froggy TEAM"
-                           Foreground="#313244" FontSize="11"
+                           Foreground="#3D2E0A" FontSize="10"
                            HorizontalAlignment="Center"
                            Margin="0,30,0,10"/>
+
             </StackPanel>
         </ScrollViewer>
 

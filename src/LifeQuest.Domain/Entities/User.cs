@@ -17,6 +17,8 @@ namespace LifeQuest.Domain.Entities
         public string PasswordHash { get; private set; }
         public QuestCollection Quests { get; private set; }
         public int Streak { get; private set; }
+        
+        public string Avatar { get; private set; } = "⚔️";
 
         public User(int id, string login, string passwordHash)
         {
@@ -71,6 +73,36 @@ namespace LifeQuest.Domain.Entities
         {
             if (!string.IsNullOrEmpty(newLogin))
                 Login = newLogin;
+        }
+        
+        public bool VerifyPassword(string password)
+        {
+            if (string.IsNullOrEmpty(PasswordHash)) return false;
+    
+            var parts = PasswordHash.Split(':');
+            if (parts.Length != 2)
+            {
+                return false;
+            }
+    
+            byte[] salt = Convert.FromBase64String(parts[0]);
+            byte[] expectedHash = Convert.FromBase64String(parts[1]);
+            byte[] actualHash = LifeQuest.Domain.SecureData.PasswordHasher.HashPassword(password, salt);
+    
+            return expectedHash.SequenceEqual(actualHash);
+        }
+
+        public void SetPassword(string password)
+        {
+            byte[] salt = LifeQuest.Domain.SecureData.PasswordHasher.GenerateSalt(16);
+            byte[] hash = LifeQuest.Domain.SecureData.PasswordHasher.HashPassword(password, salt);
+            PasswordHash = $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
+        }
+        
+        public void UpdateAvatar(string avatar)
+        {
+            if (!string.IsNullOrEmpty(avatar))
+                Avatar = avatar;
         }
     }
 }

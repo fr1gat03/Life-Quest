@@ -21,9 +21,12 @@ public class GameViewModel : ViewModelBase
 
     public string PlayerName => _user.Login;
     public string PlayerLevel => $"Рівень {_user.UserStats.Level.LevelValue}";
-    public string AvatarText => _user.Login.Length >= 2
-        ? _user.Login[..2].ToUpper()
-        : _user.Login.ToUpper();
+
+    public string AvatarDisplay => string.IsNullOrEmpty(_user.Avatar) || _user.Avatar == "⚔️"
+        ? (_user.Login.Length >= 2 ? _user.Login[..2].ToUpper() : _user.Login.ToUpper())
+        : _user.Avatar;
+
+    public bool AvatarIsEmoji => !string.IsNullOrEmpty(_user.Avatar) && _user.Avatar != "⚔️";
     public int UserId => _user.Id;
 
     public int CurrentHp => _user.UserStats.HealthPoints;
@@ -64,7 +67,7 @@ public class GameViewModel : ViewModelBase
             _userRepository.SaveUser(_user);
 
         LoadQuestsFromDb();
-        if (ActiveQuests.Count == 0)
+        if (!_questRepository.HasAnyQuests(_user.Id))
             AddDefaultQuests();
 
         OpenCreateQuestCommand = new RelayCommand(() => _mainNavigator.NavigateToCreateQuest(this));
@@ -86,8 +89,6 @@ public class GameViewModel : ViewModelBase
                 CompleteQuest
             ));
         }
-        if (!_questRepository.HasAnyQuests(_user.Id))
-            AddDefaultQuests();
     }
 
     private void AddDefaultQuests()
@@ -160,7 +161,8 @@ public class GameViewModel : ViewModelBase
         {
             _user = updatedUser;
             OnPropertyChanged(nameof(PlayerName));
-            OnPropertyChanged(nameof(AvatarText));
+            OnPropertyChanged(nameof(AvatarDisplay));
+            OnPropertyChanged(nameof(AvatarIsEmoji));
         }
     }
 }

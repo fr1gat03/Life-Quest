@@ -77,20 +77,15 @@ public class SettingsViewModel : ViewModelBase
             if (user != null)
             {
                 user.UpdateLogin(Username);
+                user.UpdateAvatar(SelectedAvatar);
                 _userRepository.SaveUser(user);
                 StatusMessage = "✅ Зміни збережено!";
-
                 _onUsernameSaved(Username);
             }
             else
             {
                 StatusMessage = "❌ Помилка: юзера не знайдено";
             }
-        });
-
-        ResetProgressCommand = new RelayCommand(() =>
-        {
-            StatusMessage = "⚠️ Прогрес скинуто (TODO: підключити до БД)";
         });
     }
 }
