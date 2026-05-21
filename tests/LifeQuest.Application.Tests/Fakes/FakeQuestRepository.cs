@@ -35,4 +35,9 @@ public class FakeQuestRepository : IQuestRepository
     {
         _quests.RemoveAll(q => q.UserId == userId);
     } 
+    
+    public int GetCompletedQuestsCount(int userId)
+    {
+        return _quests.Count(q => q.UserId == userId && q.IsCompleted);
+    }
 }

@@ -39,6 +39,8 @@ public class GameViewModel : ViewModelBase
 
     public int Gold => _user.UserStats.Gold;
     
+    public bool HasNoQuests => ActiveQuests.Count == 0;
+    public string CompletedQuestsText => $"✅ {_questRepository.GetCompletedQuestsCount(_user.Id)} виконано";
     public string StreakText => _user.Streak > 0 ? $"🔥 {_user.Streak} день поспіль" : ""; 
     public bool HasStreak => _user.Streak > 0;
 
@@ -80,6 +82,9 @@ public class GameViewModel : ViewModelBase
 
     private void LoadQuestsFromDb()
     {
+        MotivationMessage = "";
+        OnPropertyChanged(nameof(HasMotivation));
+        
         var quests = _questRepository.GetActiveQuests(_user.Id);
         foreach (var quest in quests)
         {
@@ -161,6 +166,7 @@ public class GameViewModel : ViewModelBase
             OnPropertyChanged(nameof(Gold));
             OnPropertyChanged(nameof(StreakText));
             OnPropertyChanged(nameof(HasStreak));
+            OnPropertyChanged(nameof(HasNoQuests));
         }
     }
     
@@ -180,6 +186,7 @@ public class GameViewModel : ViewModelBase
             AddDefaultQuests();
         }
 
+        OnPropertyChanged(nameof(HasNoQuests));
         OnPropertyChanged(nameof(CurrentXp));
         OnPropertyChanged(nameof(MaxXp));
         OnPropertyChanged(nameof(XpText));

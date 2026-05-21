@@ -40,6 +40,7 @@
 
                 <!-- Кнопка додати квест -->
                 <Button Grid.Column="2" Command="{Binding CreateQuestFromLastCommand}"
+                        IsEnabled="{Binding HasNpcMessage}"
                         BorderBrush="#3D2E0A" BorderThickness="1"
                         CornerRadius="8" Padding="12,7">
                     <Button.Background>
@@ -71,7 +72,7 @@
         </Border>
 
         <!-- ЧАТ -->
-        <ScrollViewer Grid.Row="2" Margin="20,16,20,0"
+        <ScrollViewer Name="ChatScrollViewer" Grid.Row="2" Margin="20,16,20,0"
                       HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemsSource="{Binding ChatHistory}">
                 <ItemsControl.ItemTemplate>

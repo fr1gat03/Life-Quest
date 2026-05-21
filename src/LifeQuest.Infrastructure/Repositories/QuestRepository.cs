@@ -21,6 +21,11 @@ public class QuestRepository : IQuestRepository
             .Where(q => !q.IsCompleted && q.UserId == userId)
             .ToList();
     }
+    
+    public int GetCompletedQuestsCount(int userId)
+    {
+        return _context.Quests.Count(q => q.UserId == userId && q.IsCompleted);
+    }
 
     public Quest? GetQuestById(string id)
     {
