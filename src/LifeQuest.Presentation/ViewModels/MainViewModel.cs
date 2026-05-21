@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Text.Json;
 using LifeQuest.Application.Interfaces;
 using LifeQuest.Application.Services;
 
@@ -55,12 +58,34 @@ public class MainViewModel : ViewModelBase
             gameVm.PlayerName,
             "",
             _userRepository,
+            _questRepository,
             (newUsername) => {
                 gameVm.RefreshAfterSettings();
                 NavigateBackToGame(gameVm);
             },
+            (newApiKey) => SaveApiKey(newApiKey),
+            () => {
+                gameVm.ResetAndReload();
+                NavigateBackToGame(gameVm); 
+            }, 
             () => NavigateBackToGame(gameVm)
         );
+    }
+    
+    private void SaveApiKey(string apiKey)
+    {
+        try
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+            var json = JsonSerializer.Serialize(new { GeminiApiKey = apiKey },
+                new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(path, json);
+            Console.WriteLine("[Settings] API ключ збережено");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Settings] Помилка збереження API ключа: {ex.Message}");
+        }
     }
 
     private TavernViewModel? _cachedTavern;

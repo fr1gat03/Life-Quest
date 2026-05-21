@@ -5,74 +5,144 @@
              x:Class="LifeQuest.Presentation.Views.TavernView"
              x:DataType="vm:TavernViewModel"
              x:CompileBindings="False"
-             Background="#1E1E2E">
+             Background="#0D0A0E">
 
-    <Grid RowDefinitions="Auto, *, Auto" Margin="20,20,20,20">
+    <Grid RowDefinitions="Auto, Auto, *, Auto">
 
-        <!-- Хедер -->
-        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,20">
-            <Button Grid.Column="0" Content="⬅ Назад до гри"
-                    Command="{Binding BackCommand}"
-                    Background="#45475A" Foreground="#CDD6F4"
-                    CornerRadius="8" Padding="15,8"/>
+        <!-- ХЕДЕР -->
+        <Border Grid.Row="0" Padding="20,14" Background="#1A1218">
+            <Grid ColumnDefinitions="Auto, *, Auto">
 
-            <TextBlock Grid.Column="1" Text="Таверна 'Старий Кодер' 🍺"
-                       FontSize="22" FontWeight="Bold"
-                       Foreground="#CDD6F4"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+                <!-- Назад -->
+                <Button Grid.Column="0" Command="{Binding BackCommand}"
+                        Background="#0D0A0E"
+                        BorderBrush="#3D2E0A" BorderThickness="1"
+                        CornerRadius="8" Padding="12,7">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="⬅" Foreground="#8B7355"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="До карти" Foreground="#8B7355"
+                                   FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
 
-            <!-- Кнопка додати квест з останньої поради -->
-            <Button Grid.Column="2"
-                    Content="📜 Додати як квест"
-                    Command="{Binding CreateQuestFromLastCommand}"
-                    Background="#CBA6F7" Foreground="#11111B"
-                    FontWeight="Bold" CornerRadius="8" Padding="15,8"/>
-        </Grid>
+                <!-- Назва -->
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center"
+                            VerticalAlignment="Center" Spacing="2">
+                    <TextBlock Text="🍺 Таверна 'Старий Кодер'"
+                               FontSize="20" FontWeight="Bold"
+                               Foreground="#C9A84C"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="────── ✦ ──────"
+                               Foreground="#3D2E0A" FontSize="11"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
 
-        <!-- Чат -->
-        <Border Grid.Row="1" Background="#181825" CornerRadius="15"
-                Padding="20" BoxShadow="0 5 15 0 #000000">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl ItemsSource="{Binding ChatHistory}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="models:ChatMessage">
-                            <Border Background="#313244" CornerRadius="10"
-                                    Padding="15" Margin="0,0,0,12">
-                                <StackPanel Spacing="6">
-                                    <TextBlock Text="{Binding Role}"
-                                               FontWeight="Bold"
-                                               Foreground="#89B4FA"
-                                               FontSize="15"/>
-                                    <!-- SelectableTextBlock дозволяє копіювати текст -->
-                                    <SelectableTextBlock Text="{Binding Text}"
-                                               Foreground="#CDD6F4"
-                                               FontSize="14"
-                                               TextWrapping="Wrap"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                <!-- Кнопка додати квест -->
+                <Button Grid.Column="2" Command="{Binding CreateQuestFromLastCommand}"
+                        BorderBrush="#3D2E0A" BorderThickness="1"
+                        CornerRadius="8" Padding="12,7">
+                    <Button.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                            <GradientStop Color="#3D2A00" Offset="0"/>
+                            <GradientStop Color="#5C3D00" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="📜" VerticalAlignment="Center"/>
+                        <TextBlock Text="Додати як звит"
+                                   Foreground="#C9A84C" FontWeight="Bold"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+            </Grid>
         </Border>
 
-        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
-            <TextBox Grid.Column="0"
-                     Text="{Binding UserInput}"
-                     PlaceholderText="Запитай щось у Елдора..."
-                     Background="#313244" Foreground="#CDD6F4"
-                     BorderThickness="0" CornerRadius="8"
-                     Padding="15" Margin="0,0,15,0" FontSize="15"/>
+        <!-- Золотий роздільник -->
+        <Border Grid.Row="1" Height="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="Transparent" Offset="0"/>
+                    <GradientStop Color="#C9A84C" Offset="0.5"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
 
-            <Button Grid.Column="1"
-                    Content="Відправити ✉️"
-                    Command="{Binding SendCommand}"
-                    IsEnabled="{Binding !IsLoading}"
-                    Background="#CBA6F7" Foreground="#11111B"
-                    FontWeight="Bold" FontSize="15"
-                    CornerRadius="8" Padding="20,12"/>
-        </Grid>
+        <!-- ЧАТ -->
+        <ScrollViewer Grid.Row="2" Margin="20,16,20,0"
+                      HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding ChatHistory}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="models:ChatMessage">
+                        <Border Margin="0,0,0,12" CornerRadius="12"
+                                BorderThickness="1">
 
+                            <!-- Різні стилі для NPC і гравця -->
+                            <Border.Background>
+                                <SolidColorBrush Color="#1A1218"/>
+                            </Border.Background>
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#3D2E0A"/>
+                            </Border.BorderBrush>
+
+                            <StackPanel Margin="16,12" Spacing="6">
+                                <!-- Ім'я -->
+                                <TextBlock Text="{Binding Role}"
+                                           FontWeight="Bold"
+                                           Foreground="#C9A84C"
+                                           FontSize="14"/>
+                                <SelectableTextBlock Text="{Binding Text}"
+                                           Foreground="#E8D5B7"
+                                           FontSize="13"
+                                           TextWrapping="Wrap"
+                                           LineHeight="20"/>
+                            </StackPanel>
+
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- ПОЛЕ ВВОДУ -->
+        <Border Grid.Row="3" Padding="20,12,20,20"
+                Background="#1A1218">
+            <Border BorderBrush="#3D2E0A" BorderThickness="0,1,0,0">
+                <Grid ColumnDefinitions="*, Auto" Margin="0,12,0,0">
+
+                    <Border Grid.Column="0"
+                            Background="#0D0A0E" CornerRadius="10"
+                            BorderBrush="#3D2E0A" BorderThickness="1"
+                            Margin="0,0,12,0">
+                        <TextBox Text="{Binding UserInput}"
+                                 PlaceholderText="Запитай щось у Елдора..."
+                                 Background="Transparent"
+                                 Foreground="#E8D5B7"
+                                 BorderThickness="0"
+                                 Padding="14,10"
+                                 FontSize="14"/>
+                    </Border>
+
+                    <Button Grid.Column="1"
+                            Command="{Binding SendCommand}"
+                            IsEnabled="{Binding !IsLoading}"
+                            CornerRadius="10" Padding="20,10"
+                            BorderBrush="#6B2FC9" BorderThickness="1"
+                            Background="#1A0A2E">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="✉️" FontSize="16"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Відправити"
+                                       Foreground="#9B6FD4"
+                                       FontSize="14" FontWeight="Bold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+            </Border>
+        </Border>
     </Grid>
 </UserControl>
