@@ -38,6 +38,9 @@ public class GameViewModel : ViewModelBase
     public string XpText => $"{CurrentXp}/{MaxXp}";
 
     public int Gold => _user.UserStats.Gold;
+    
+    public string StreakText => _user.Streak > 0 ? $"🔥 {_user.Streak} день поспіль" : "";
+    public bool HasStreak => _user.Streak > 0;
 
     public string MotivationMessage
     {
@@ -138,7 +141,12 @@ public class GameViewModel : ViewModelBase
         if (result.IsSuccess)
         {
             var updatedUser = _userRepository.GetUserById(_user.Id);
-            if (updatedUser != null) _user = updatedUser;
+            if (updatedUser != null)
+            {
+                _user = updatedUser;
+                _user.UpdateStreak();
+                _userRepository.SaveUser(_user);
+            }
 
             if (!string.IsNullOrEmpty(result.MotivationMessage))
             {
@@ -151,7 +159,40 @@ public class GameViewModel : ViewModelBase
             OnPropertyChanged(nameof(XpText));
             OnPropertyChanged(nameof(PlayerLevel));
             OnPropertyChanged(nameof(Gold));
+            OnPropertyChanged(nameof(StreakText));  // ← додати
+            OnPropertyChanged(nameof(HasStreak));
         }
+    }
+    
+    public void ResetAndReload()
+    {
+        ActiveQuests.Clear();
+
+        var updatedUser = _userRepository.GetUserById(_user.Id);
+        if (updatedUser != null)
+        {
+            _user = updatedUser;
+        }
+
+        LoadQuestsFromDb();
+        if (!_questRepository.HasAnyQuests(_user.Id))
+        {
+            AddDefaultQuests();
+        }
+
+        OnPropertyChanged(nameof(CurrentXp));
+        OnPropertyChanged(nameof(MaxXp));
+        OnPropertyChanged(nameof(XpText));
+        OnPropertyChanged(nameof(PlayerLevel));
+        OnPropertyChanged(nameof(Gold));
+        OnPropertyChanged(nameof(CurrentHp));
+        OnPropertyChanged(nameof(HpText));
+        OnPropertyChanged(nameof(StreakText));
+        OnPropertyChanged(nameof(HasStreak));
+        OnPropertyChanged(nameof(AvatarDisplay));
+
+        MotivationMessage = "";
+        OnPropertyChanged(nameof(HasMotivation));
     }
 
     public void RefreshAfterSettings()

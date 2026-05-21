@@ -30,4 +30,9 @@ public class FakeQuestRepository : IQuestRepository
     {
         return _quests.Any(q => q.UserId == userId);
     }
+    
+    public void DeleteAllUserQuests(int userId)
+    {
+        _quests.RemoveAll(q => q.UserId == userId);
+    }
 }

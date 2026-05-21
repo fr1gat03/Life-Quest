@@ -26,6 +26,13 @@ public class QuestRepository : IQuestRepository
     {
         return _context.Quests.Find(id);
     }
+    
+    public void DeleteAllUserQuests(int userId)
+    {
+        var quests = _context.Quests.Where(q => q.UserId == userId).ToList();
+        _context.Quests.RemoveRange(quests);
+        _context.SaveChanges();
+    }
 
     public void UpdateQuest(Quest quest)
     {

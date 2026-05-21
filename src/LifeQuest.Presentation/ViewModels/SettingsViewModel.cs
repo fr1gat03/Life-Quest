@@ -10,6 +10,9 @@ public class SettingsViewModel : ViewModelBase
     private readonly Action _onBack;
     private readonly Action<string> _onUsernameSaved;
     private readonly IUserRepository _userRepository;
+    private readonly IQuestRepository _questRepository;
+    private readonly Action<string> _onApiKeySaved;
+    private readonly Action _onProgressReset;
 
     private string _username = "";
     private string _apiKey = "";
@@ -53,7 +56,7 @@ public class SettingsViewModel : ViewModelBase
     public ICommand SelectAvatarCommand { get; }
 
     public SettingsViewModel(int heroId, string username, string currentApiKey,
-        IUserRepository userRepository, Action<string> onUsernameSaved, Action onBack)
+        IUserRepository userRepository, IQuestRepository questRepository, Action<string> onUsernameSaved, Action<string> onApiKeySaved, Action onProgressReset, Action onBack)
     {
         HeroId = heroId;
         _username = username;
@@ -61,9 +64,13 @@ public class SettingsViewModel : ViewModelBase
         _userRepository = userRepository;
         _onUsernameSaved = onUsernameSaved;
         _onBack = onBack;
+        _questRepository = questRepository;
+        _onProgressReset = onProgressReset;
 
         BackCommand = new RelayCommand(() => _onBack());
         SelectAvatarCommand = new RelayCommand(() => { });
+        
+        _onApiKeySaved = onApiKeySaved;
 
         SaveCommand = new RelayCommand(() =>
         {
@@ -73,18 +80,38 @@ public class SettingsViewModel : ViewModelBase
                 return;
             }
 
+            var existingUser = _userRepository.GetUserByLogin(Username);
+            if (existingUser != null && existingUser.Id != HeroId)
+            {
+                StatusMessage = "❌ Цей логін вже використовується іншим героєм";
+                return;
+            }
+
             var user = _userRepository.GetUserById(HeroId);
             if (user != null)
             {
                 user.UpdateLogin(Username);
                 user.UpdateAvatar(SelectedAvatar);
                 _userRepository.SaveUser(user);
-                StatusMessage = "✅ Зміни збережено!";
-                _onUsernameSaved(Username);
             }
-            else
+
+            if (!string.IsNullOrWhiteSpace(ApiKey))
+                _onApiKeySaved(ApiKey);
+
+            StatusMessage = "✅ Зміни збережено!";
+            _onUsernameSaved(Username);
+        });
+        
+        ResetProgressCommand = new RelayCommand(() =>
+        {
+            var user = _userRepository.GetUserById(HeroId);
+            if (user != null)
             {
-                StatusMessage = "❌ Помилка: юзера не знайдено";
+                user.ResetProgress();
+                _userRepository.SaveUser(user);
+                _questRepository.DeleteAllUserQuests(HeroId);
+                StatusMessage = "⚔️ Прогрес скинуто. Починай знову, герою!";
+                _onProgressReset();
             }
         });
     }

@@ -33,17 +33,19 @@
 
                     <StackPanel VerticalAlignment="Center" Spacing="5">
                         <TextBlock Text="{Binding PlayerName, Mode=OneWay}"
-                                   FontSize="19" FontWeight="Bold"
-                                   Foreground="#E8D5B7"/>
-                        <Border Background="#2A1F0A" CornerRadius="8"
-                                Padding="8,3" HorizontalAlignment="Left"
-                                BorderBrush="#3D2E0A" BorderThickness="1">
+                                   FontSize="19" FontWeight="Bold" Foreground="#E8D5B7"/>
+                        <Border Background="#2A1F0A" CornerRadius="8" Padding="8,3"
+                                HorizontalAlignment="Left" BorderBrush="#3D2E0A" BorderThickness="1">
                             <TextBlock Text="{Binding PlayerLevel, Mode=OneWay}"
-                                       FontSize="11" Foreground="#C9A84C"
-                                       FontWeight="Bold"/>
+                                       FontSize="11" Foreground="#C9A84C" FontWeight="Bold"/>
                         </Border>
+                        <TextBlock Text="{Binding StreakText, Mode=OneWay}"
+                                   FontSize="11" Foreground="#FF6B35"
+                                   IsVisible="{Binding HasStreak, Mode=OneWay}"/>
                     </StackPanel>
                 </StackPanel>
+                
+                
 
                 <!-- HP / XP бари -->
                 <StackPanel Grid.Column="1" VerticalAlignment="Center"
@@ -195,7 +197,6 @@
                                             </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
-                                    <!-- Замість яскравого Background="{Binding DifficultyColor}" -->
                                     <Button Grid.Column="1"
                                             Content="Виконати ✓"
                                             Command="{Binding CompleteCommand}"

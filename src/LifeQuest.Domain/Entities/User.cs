@@ -16,6 +16,8 @@ namespace LifeQuest.Domain.Entities
         public string Login { get; private set; }
         public string PasswordHash { get; private set; }
         public QuestCollection Quests { get; private set; }
+        public DateTime? LastQuestDate { get; private set; }
+
         public int Streak { get; private set; }
         
         public string Avatar { get; private set; } = "⚔️";
@@ -47,6 +49,23 @@ namespace LifeQuest.Domain.Entities
         {
             return Quests.ToComplete(id);
         }
+        
+        public void UpdateStreak()
+        {
+            var today = DateTime.Today;
+            if (LastQuestDate?.Date == today)
+            {
+                return;
+            }
+
+            if (LastQuestDate?.Date != today.AddDays(-1))
+            {
+                ResetStreak();
+            }
+
+            IncreaseStreak();
+            LastQuestDate = today;
+        }
 
         public void IncreaseStreak()
         {
@@ -56,6 +75,13 @@ namespace LifeQuest.Domain.Entities
         public void ResetStreak()
         {
             Streak = 0;
+        }
+        
+        public void ResetProgress()
+        {
+            UserStats = new UserStats();
+            ResetStreak();
+            LastQuestDate = null;
         }
 
         public void UpdateHealthPoints(int healthPoints)
