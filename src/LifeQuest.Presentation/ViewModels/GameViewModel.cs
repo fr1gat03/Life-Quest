@@ -159,7 +159,7 @@ public class GameViewModel : ViewModelBase
             OnPropertyChanged(nameof(XpText));
             OnPropertyChanged(nameof(PlayerLevel));
             OnPropertyChanged(nameof(Gold));
-            OnPropertyChanged(nameof(StreakText));  // ← додати
+            OnPropertyChanged(nameof(StreakText));
             OnPropertyChanged(nameof(HasStreak));
         }
     }
