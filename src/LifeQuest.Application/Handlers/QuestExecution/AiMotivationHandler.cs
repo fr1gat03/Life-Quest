@@ -13,7 +13,12 @@ public sealed class AiMotivationHandler : BaseQuestHandler
 
     public override async Task<QuestExecutionResult> Handle(QuestExecutionContext context)
     {
-        context.MotivationMessage = await _aiService.GenerateMotivationMessage(context.Quest.Title);
+        var motivation = await _aiService.GenerateMotivationMessage(context.Quest.Title);
+
+        context.MotivationMessage = string.IsNullOrEmpty(context.MotivationMessage)
+            ? motivation
+            : context.MotivationMessage + "\n" + motivation;
+
         return await PassToNextAsync(context);
     }
 }
