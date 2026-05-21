@@ -56,7 +56,7 @@ public class MainViewModel : ViewModelBase
         CurrentPage = new SettingsViewModel(
             gameVm.UserId,
             gameVm.PlayerName,
-            "",
+            GetCurrentApiKey(),
             _userRepository,
             _questRepository,
             (newUsername) => {
@@ -66,8 +66,8 @@ public class MainViewModel : ViewModelBase
             (newApiKey) => SaveApiKey(newApiKey),
             () => {
                 gameVm.ResetAndReload();
-                NavigateBackToGame(gameVm); 
-            }, 
+                NavigateBackToGame(gameVm);
+            },
             () => NavigateBackToGame(gameVm)
         );
     }
@@ -85,6 +85,21 @@ public class MainViewModel : ViewModelBase
         catch (Exception ex)
         {
             Console.WriteLine($"[Settings] Помилка збереження API ключа: {ex.Message}");
+        }
+    }
+    
+    private string GetCurrentApiKey()
+    {
+        try
+        {
+            var path = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+            var json = File.ReadAllText(path);
+            var doc = System.Text.Json.JsonDocument.Parse(json);
+            return doc.RootElement.GetProperty("GeminiApiKey").GetString() ?? "";
+        }
+        catch
+        {
+            return ""; 
         }
     }
 

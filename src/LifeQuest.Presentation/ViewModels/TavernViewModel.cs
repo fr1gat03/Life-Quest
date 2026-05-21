@@ -12,6 +12,7 @@ public class TavernViewModel : ViewModelBase
     private readonly IAiService _aiService;
     private Action _onBack;
     private readonly Action<string> _onCreateQuestFromAdvice;
+    public bool HasNpcMessage => ChatHistory.Any(m => m.Role.Contains("Елдор") && ChatHistory.IndexOf(m) > 0);
 
     private string _userInput = "";
     private bool _isLoading = false;
@@ -85,5 +86,7 @@ public class TavernViewModel : ViewModelBase
 
         ChatHistory.Add(new ChatMessage { Role = "🧙‍♂️ Елдор", Text = response });
         IsLoading = false;
+        
+        ChatHistory.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNpcMessage));
     }
 }
