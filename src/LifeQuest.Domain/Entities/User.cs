@@ -18,7 +18,7 @@ namespace LifeQuest.Domain.Entities
         public QuestCollection Quests { get; private set; }
         public DateTime? LastQuestDate { get; private set; }
 
-        public int Streak { get; private set; }
+        public int Streak { get; private set; } 
         
         public string Avatar { get; private set; } = "⚔️";
 

@@ -51,7 +51,7 @@ public class LoginViewModel : ViewModelBase
             var existingUser = _userRepository.GetUserByLogin(Username);
             if (existingUser != null)
             {
-                ErrorMessage = "⚠️ Цей логін вже зайнятий";
+                ErrorMessage = "⚠️ Цей логін вже зайнятий"; 
                 return;
             }
 

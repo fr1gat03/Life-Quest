@@ -8,5 +8,5 @@ public interface IQuestRepository
     Quest? GetQuestById(string id);
     bool HasAnyQuests(int userId);
     void UpdateQuest(Quest quest);
-    void DeleteAllUserQuests(int userId);
+    void DeleteAllUserQuests(int userId); 
 }

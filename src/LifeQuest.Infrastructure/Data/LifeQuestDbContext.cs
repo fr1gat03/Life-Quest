@@ -19,7 +19,7 @@ public class LifeQuestDbContext : DbContext
             entity.HasKey(u => u.Id);
             entity.Ignore(u => u.Quests);
             entity.Property(u => u.Avatar);
-            entity.Property(u => u.LastQuestDate);
+            entity.Property(u => u.LastQuestDate); 
 
             entity.OwnsOne(u => u.UserStats, stats =>
             {

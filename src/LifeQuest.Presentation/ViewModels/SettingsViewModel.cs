@@ -47,7 +47,7 @@ public class SettingsViewModel : ViewModelBase
 
     public ObservableCollection<string> Avatars { get; } = new()
     {
-        "⚔️", "🧙", "🏹", "🛡️", "🐉", "🧝", "🦸", "🔮", "👑", "💀"
+        "⚔️", "🧙", "🏹", "🛡️", "🐉", "🧝", "🦸", "🔮", "👑", "💀" 
     };
 
     public ICommand SaveCommand { get; }

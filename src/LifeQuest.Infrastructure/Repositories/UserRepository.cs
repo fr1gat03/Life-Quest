@@ -26,7 +26,7 @@ public class UserRepository : IUserRepository
 
     public void SaveUser(User user)
     {
-        if (!_context.Users.Any(u => u.Id == user.Id))
+        if (!_context.Users.Any(u => u.Id == user.Id)) 
         {
             _context.Users.Add(user);
         }

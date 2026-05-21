@@ -99,9 +99,9 @@ public class GeminiAiService : IAiService
     public async Task<string> GetNpcResponse(string userMessage, List<ChatMessage> history)
     {
         var prompt = $@"Ти мудрий NPC Елдор у таверні фентезійної RPG гри Life Quest.
-Говори як середньовічний мудрець — коротко, по справі, з легким гумором.
-Відповідай ТІЛЬКИ простим текстом БЕЗ markdown (без **, ##, *, - та інших символів).
-Повідомлення гравця: {userMessage}";
+    Говори як середньовічний мудрець — коротко, по справі, з легким гумором.
+    Відповідай ТІЛЬКИ простим текстом БЕЗ markdown (без **, ##, *, - та інших символів).
+    Повідомлення гравця: {userMessage}";
 
         try
         {
@@ -120,9 +120,9 @@ public class GeminiAiService : IAiService
     public async Task<string> GenerateMotivationMessage(string questTitle)
     {
         var prompt = $@"Ти мотиваційний тренер у RPG грі Life Quest.
-Напиши ОДНЕ коротке речення мотивації для гравця який щойно виконав квест: '{questTitle}'.
-Звертайся до гравця, будь натхненним і позитивним.
-Тільки простий текст, без markdown, без зайвих слів.";
+    Напиши ОДНЕ коротке речення мотивації для гравця який щойно виконав квест: '{questTitle}'.
+    Звертайся до гравця, будь натхненним і позитивним.
+    Тільки простий текст, без markdown, без зайвих слів.";
 
         try
         {

@@ -6,6 +6,6 @@ public partial class CreateQuestView : UserControl
 {
     public CreateQuestView()
     {
-        InitializeComponent();
+        InitializeComponent(); 
     }
 }
