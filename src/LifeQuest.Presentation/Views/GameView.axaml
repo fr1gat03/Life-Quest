@@ -257,7 +257,7 @@
                 </Border>
 
                 <!-- Версія -->
-                <TextBlock Text="Life Quest v0.0.1 — Froggy TEAM"
+                <TextBlock Text="{Binding AppVersion, StringFormat='Life Quest v{0} — Froggy TEAM'}"
                            Foreground="#3D2E0A" FontSize="10"
                            HorizontalAlignment="Center"
                            Margin="0,30,0,10"/>

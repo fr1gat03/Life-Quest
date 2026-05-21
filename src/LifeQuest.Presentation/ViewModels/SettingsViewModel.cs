@@ -13,6 +13,11 @@ public class SettingsViewModel : ViewModelBase
     private readonly IQuestRepository _questRepository;
     private readonly Action<string> _onApiKeySaved;
     private readonly Action _onProgressReset;
+    
+    public string AppVersion => 
+        System.Reflection.Assembly.GetExecutingAssembly()
+            .GetName().Version?.ToString(3) ?? "0.0.1";
+
 
     private string _username = "";
     private string _apiKey = "";

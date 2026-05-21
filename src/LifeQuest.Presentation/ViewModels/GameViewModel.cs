@@ -19,6 +19,10 @@ public class GameViewModel : ViewModelBase
 
     private string _motivationMessage = "";
 
+    public string AppVersion => 
+        System.Reflection.Assembly.GetExecutingAssembly()
+            .GetName().Version?.ToString(3) ?? "0.0.1";
+    
     public string PlayerName => _user.Login;
     public string PlayerLevel => $"Рівень {_user.UserStats.Level.LevelValue}";
 
