@@ -39,7 +39,7 @@ public class GameViewModel : ViewModelBase
 
     public int Gold => _user.UserStats.Gold;
     
-    public string StreakText => _user.Streak > 0 ? $"🔥 {_user.Streak} день поспіль" : "";
+    public string StreakText => _user.Streak > 0 ? $"🔥 {_user.Streak} день поспіль" : ""; 
     public bool HasStreak => _user.Streak > 0;
 
     public string MotivationMessage

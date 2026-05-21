@@ -57,7 +57,7 @@ public class TavernViewModel : ViewModelBase
         {
             ChatHistory.Add(new ChatMessage
             {
-                Role = "🧙‍♂️ Елдор",
+                Role = "🧙‍♂️ Елдор", 
                 Text = "Вітаю, мандрівнику! Я Елдор. Розкажи мені про свою велику ціль, і я допоможу розбити її на дрібні квести."
             });
         }
