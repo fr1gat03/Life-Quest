@@ -13,8 +13,8 @@ namespace LifeQuest.Domain.Entities
         public int Level => this.UserStats.Level.LevelValue;
 
         public int Id { get; private set; }
-        public string Login { get; private set; }
-        public string PasswordHash { get; private set; }
+        public string Login { get; private set; } = null!;
+        public string PasswordHash { get; private set; } = null!;
         public QuestCollection Quests { get; private set; }
         public DateTime? LastQuestDate { get; private set; }
 

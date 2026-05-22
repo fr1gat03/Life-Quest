@@ -4,13 +4,13 @@ namespace LifeQuest.Domain.Entities;
 
 public class Quest
 {
-    public string Id { get; private set; }
-    public string Title { get; private set; }
+    public string Id { get; private set; } = null!;
+    public string Title { get; private set; } = null!;
     public int RewardXp { get; private set; }
     public int RewardGold { get; private set; }
     public bool IsCompleted { get; private set; }
     public Difficulty Difficulty { get; private set; }
-    public int UserId { get; private set; } // ← новий рядок
+    public int UserId { get; private set; }
 
     private Quest() { }
 
