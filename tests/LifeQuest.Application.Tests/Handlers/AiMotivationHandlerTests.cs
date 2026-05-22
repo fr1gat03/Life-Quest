@@ -6,7 +6,7 @@ namespace LifeQuest.Application.Tests.Handlers;
 
 public class AiMotivationHandlerTests
 {
-    private AiMotivationHandler _handler = null;
+    private AiMotivationHandler _handler = null!;
 
     [SetUp]
     public void Setup() => _handler = new AiMotivationHandler(new FakeAiService());
