@@ -30,7 +30,7 @@ namespace LifeQuest.Domain.Tests
         [Test]
         public void AddQuest_NullId_ThrowsArgumentException()
         {
-            Assert.Throws<ArgumentException>(() => _collection.AddQuest(null, _quest));
+            Assert.Throws<ArgumentException>(() => _collection.AddQuest(null!, _quest));
         }
 
         [Test]
