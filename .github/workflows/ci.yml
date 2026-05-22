@@ -42,13 +42,13 @@ jobs:
       - name: Run automated tests
         run: dotnet test src/LifeQuest.slnx --configuration Release --no-build --verbosity normal
 
-      - name: Pack Domain for GitHub Packages
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: dotnet pack src/LifeQuest.Domain/LifeQuest.Domain.csproj -c Release -o ./nuget_packages
+      # - name: Pack Domain for GitHub Packages
+      #  if: startsWith(github.ref, 'refs/tags/v')
+      #  run: dotnet pack src/LifeQuest.Domain/LifeQuest.Domain.csproj -c Release -o ./nuget_packages
 
-      - name: Publish to GitHub Packages
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: dotnet nuget push ./nuget_packages/*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+      # - name: Publish to GitHub Packages
+      #   if: startsWith(github.ref, 'refs/tags/v')
+      #  run: dotnet nuget push ./nuget_packages/*.nupkg --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Windows App
         if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'push' && github.ref == 'refs/heads/main')
