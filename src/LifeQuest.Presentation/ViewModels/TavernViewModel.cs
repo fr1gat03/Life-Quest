@@ -42,23 +42,23 @@ public class TavernViewModel : ViewModelBase
         _onCreateQuestFromAdvice = onCreateQuestFromAdvice;
 
         BackCommand = new RelayCommand(() => _onBack());
-
         SendCommand = new RelayCommand(async () => await SendMessage());
 
         CreateQuestFromLastCommand = new RelayCommand(() =>
         {
             var lastNpcMsg = ChatHistory
                 .LastOrDefault(m => m.Role.Contains("Елдор"))?.Text;
-
             if (!string.IsNullOrEmpty(lastNpcMsg))
                 _onCreateQuestFromAdvice(lastNpcMsg);
         });
+
+        ChatHistory.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNpcMessage));
 
         if (ChatHistory.Count == 0)
         {
             ChatHistory.Add(new ChatMessage
             {
-                Role = "🧙‍♂️ Елдор", 
+                Role = "🧙‍♂️ Елдор",
                 Text = "Вітаю, мандрівнику! Я Елдор. Розкажи мені про свою велику ціль, і я допоможу розбити її на дрібні квести."
             });
         }
@@ -86,7 +86,5 @@ public class TavernViewModel : ViewModelBase
 
         ChatHistory.Add(new ChatMessage { Role = "🧙‍♂️ Елдор", Text = response });
         IsLoading = false;
-        
-        ChatHistory.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasNpcMessage));
     }
 }
